@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Enviroment ###
+.env.properties
+
+# data-init.sql
+src/main/java/com/backend/dogwalks/seeder/
