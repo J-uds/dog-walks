@@ -7,8 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-
-public class CustomUserDetail implements UserDetails {
+public class  CustomUserDetail implements UserDetails {
     private final CustomUser user;
 
     public CustomUserDetail(CustomUser user) {
