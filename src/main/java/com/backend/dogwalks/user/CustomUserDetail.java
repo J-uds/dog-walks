@@ -24,6 +24,7 @@ public class  CustomUserDetail implements UserDetails {
         return user.getPassword();
     }
 
+    //se loguea con email
     @Override
     public String getUsername() {
         return user.getEmail();
