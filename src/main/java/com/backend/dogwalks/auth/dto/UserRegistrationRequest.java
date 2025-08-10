@@ -1,4 +1,4 @@
-package com.backend.dogwalks.user.dtos;
+package com.backend.dogwalks.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
