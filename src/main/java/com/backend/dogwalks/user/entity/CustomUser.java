@@ -32,5 +32,12 @@ public class CustomUser {
     @Column
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public CustomUser(String username, String email, String password, String userImgUrl) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.userImgUrl = userImgUrl;
+    }
 }
 
