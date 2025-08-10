@@ -1,5 +1,6 @@
-package com.backend.dogwalks.user;
+package com.backend.dogwalks.user.entity;
 
+import com.backend.dogwalks.user.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
