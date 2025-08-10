@@ -37,3 +37,4 @@ build/
 
 # data-init.sql
 src/main/java/com/backend/dogwalks/seeder/
+.env
