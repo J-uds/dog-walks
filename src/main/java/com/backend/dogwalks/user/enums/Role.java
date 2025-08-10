@@ -1,4 +1,4 @@
-package com.backend.dogwalks.user;
+package com.backend.dogwalks.user.enums;
 
 public enum Role {
     USER,
