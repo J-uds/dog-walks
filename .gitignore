@@ -35,5 +35,5 @@ build/
 ### Enviroment ###
 .env
 
-# data-init.sql
+#data-init.sql
 #src/main/java/com/backend/dogwalks/seeder/
