@@ -1,5 +1,6 @@
-package com.backend.dogwalks.user;
+package com.backend.dogwalks.security;
 
+import com.backend.dogwalks.user.entity.CustomUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
