@@ -22,11 +22,11 @@ public class JwtUtil {
     @Value("${app.jwt.expiration}")
     private Long jwtExpiration;
 
-    public String generateToken(CustomUserDetail userDetail) {
+    public String generateToken(CustomUserDetails userDetail) {
         return buildToken(userDetail, jwtExpiration);
     }
 
-    private String buildToken(CustomUserDetail userDetail, long jwtExpiration) {
+    private String buildToken(CustomUserDetails userDetail, long jwtExpiration) {
         return Jwts
                 .builder()
                 .subject(userDetail.getUsername())
