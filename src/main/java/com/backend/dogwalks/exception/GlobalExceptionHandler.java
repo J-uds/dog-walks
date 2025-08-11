@@ -2,6 +2,7 @@ package com.backend.dogwalks.exception;
 
 import com.backend.dogwalks.exception.custom_exception.EntityAlreadyExistsException;
 import com.backend.dogwalks.exception.custom_exception.EntityNotFoundException;
+import com.backend.dogwalks.exception.custom_exception.UsernameNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,5 +32,15 @@ public class GlobalExceptionHandler {
         );
 
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    public ResponseEntity<ErrorResponse> handleEUsernameNotFoundException(UsernameNotFoundException exception, HttpServletRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.NOT_FOUND,
+                exception.getMessage(),
+                request.getRequestURI()
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }
