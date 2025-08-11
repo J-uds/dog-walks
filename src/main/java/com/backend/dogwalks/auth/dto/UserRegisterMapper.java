@@ -12,5 +12,7 @@ public class UserRegisterMapper {
         );
     }
 
-
+    public static UserRegisterResponse toDto (CustomUser user) {
+        return new UserRegisterResponse(user.getId(), user.getUsername(), user.getEmail(), user.getUserImgUrl(), user.getRole());
+    }
 }
