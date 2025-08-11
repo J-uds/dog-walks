@@ -21,7 +21,7 @@ public class AuthService {
 
     public UserRegisterResponse registerUser(UserRegisterRequest request) {
         if (customUserRepository.existsByEmail(request.email())) {
-            throw new EntityAlreadyExistsException("El e-mail " + request.email() + " ya está registrado");
+            throw new EntityAlreadyExistsException("E-mail " + request.email() + " is already registered");
         }
 
         CustomUser newUser = UserRegisterMapper.toEntity(request);

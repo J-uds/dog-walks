@@ -10,21 +10,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CustomUserService implements UserDetailsService {
-    private final CustomUserRepository customUserRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
-
-    public CustomUserService(CustomUserRepository customUserRepository, BCryptPasswordEncoder passwordEncoder) {
-        this.customUserRepository = customUserRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return customUserRepository.findByUsername(username)
-                .map(user -> new CustomUserDetails(user))
-                .orElseThrow(() -> new UsernameNotFoundException(username));
-    }
-
+public class CustomUserService {
 
 }
