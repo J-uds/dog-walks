@@ -29,9 +29,12 @@ public class CustomUser {
     @Column(name = "img")
     private String userImgUrl;
 
-    @Column
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
+
+    /*@Column(nullable = false)
+    private Boolean isActive;*/
 
     public CustomUser(String username, String email, String password, String userImgUrl) {
         this.username = username;
