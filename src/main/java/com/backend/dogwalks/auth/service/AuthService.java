@@ -5,6 +5,7 @@ import com.backend.dogwalks.auth.dto.UserRegisterRequest;
 import com.backend.dogwalks.auth.dto.UserRegisterResponse;
 import com.backend.dogwalks.exception.custom_exception.EntityAlreadyExistsException;
 import com.backend.dogwalks.user.entity.CustomUser;
+import com.backend.dogwalks.user.enums.Role;
 import com.backend.dogwalks.user.repository.CustomUserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ public class AuthService {
 
         CustomUser newUser = UserRegisterMapper.toEntity(request);
         newUser.setPassword(passwordEncoder.encode(request.password()));
+        newUser.setRole(Role.USER);
         CustomUser saveUser = customUserRepository.save(newUser);
 
         return UserRegisterMapper.toDto(saveUser);
