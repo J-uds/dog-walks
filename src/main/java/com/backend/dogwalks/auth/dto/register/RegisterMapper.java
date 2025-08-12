@@ -1,4 +1,4 @@
-package com.backend.dogwalks.auth.dto;
+package com.backend.dogwalks.auth.dto.register;
 
 import com.backend.dogwalks.user.entity.CustomUser;
 

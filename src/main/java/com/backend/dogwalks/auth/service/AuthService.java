@@ -1,8 +1,8 @@
 package com.backend.dogwalks.auth.service;
 
-import com.backend.dogwalks.auth.dto.RegisterMapper;
-import com.backend.dogwalks.auth.dto.RegisterRequest;
-import com.backend.dogwalks.auth.dto.RegisterResponse;
+import com.backend.dogwalks.auth.dto.register.RegisterMapper;
+import com.backend.dogwalks.auth.dto.register.RegisterRequest;
+import com.backend.dogwalks.auth.dto.register.RegisterResponse;
 import com.backend.dogwalks.exception.custom_exception.EntityAlreadyExistsException;
 import com.backend.dogwalks.user.entity.CustomUser;
 import com.backend.dogwalks.user.enums.Role;

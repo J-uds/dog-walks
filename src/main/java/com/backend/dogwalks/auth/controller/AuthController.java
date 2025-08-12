@@ -1,7 +1,7 @@
 package com.backend.dogwalks.auth.controller;
 
-import com.backend.dogwalks.auth.dto.RegisterRequest;
-import com.backend.dogwalks.auth.dto.RegisterResponse;
+import com.backend.dogwalks.auth.dto.register.RegisterRequest;
+import com.backend.dogwalks.auth.dto.register.RegisterResponse;
 import com.backend.dogwalks.auth.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
