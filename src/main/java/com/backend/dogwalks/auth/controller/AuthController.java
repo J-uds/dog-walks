@@ -1,5 +1,7 @@
 package com.backend.dogwalks.auth.controller;
 
+import com.backend.dogwalks.auth.dto.login.LoginRequest;
+import com.backend.dogwalks.auth.dto.login.LoginResponse;
 import com.backend.dogwalks.auth.dto.register.RegisterRequest;
 import com.backend.dogwalks.auth.dto.register.RegisterResponse;
 import com.backend.dogwalks.auth.service.AuthService;
@@ -22,5 +24,10 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> registerUser(@Valid @RequestBody RegisterRequest request) {
         return new ResponseEntity<>(authService.registerUser(request), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> loginUser(@Valid @RequestBody LoginRequest request) {
+        return new ResponseEntity<>(authService.loginUser(request), HttpStatus.OK);
     }
 }
