@@ -43,7 +43,16 @@ public class JwtUtil {
         return buildToken(userDetail, jwtExpiration);
     }
 
-    public String extractUsername(String token) {
+    private Claims extractAllClaims(String token) {
+        return Jwts
+                .parser()
+                .verifyWith(getSignKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    public String extractEmail(String token) {
         return extractAllClaims(token).getSubject();
     }
 
@@ -54,16 +63,5 @@ public class JwtUtil {
         } catch(Exception exception) {
             return false;
         }
-    }
-
-
-
-    private Claims extractAllClaims(String token) {
-        return Jwts
-                .parser()
-                .verifyWith(getSignKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
     }
 }
