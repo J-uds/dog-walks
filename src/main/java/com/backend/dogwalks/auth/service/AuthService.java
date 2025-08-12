@@ -1,5 +1,6 @@
 package com.backend.dogwalks.auth.service;
 
+import com.backend.dogwalks.auth.dto.login.LoginMapper;
 import com.backend.dogwalks.auth.dto.login.LoginRequest;
 import com.backend.dogwalks.auth.dto.login.LoginResponse;
 import com.backend.dogwalks.auth.dto.register.RegisterMapper;
@@ -51,9 +52,10 @@ public class AuthService {
         CustomUserDetails userDetails =  (CustomUserDetails) authentication.getPrincipal();
 
         String token = jwtUtil.generateToken(userDetails);
+        String tokenType = "Bearer";
 
         CustomUser user = customUserRepository.findUserByEmail(userDetails.getUsername()).orElseThrow(() -> new EntityNotFoundException("Authenticated user with e-mail: " + userDetails.getUsername() + ", not found in data base"));
 
-       return new LoginResponse(token,"Bearer", user.getId(), user.getUsername(), user.getEmail(), user.getRole());
+       return LoginMapper.toDto(token, tokenType, user);
     }
 }
