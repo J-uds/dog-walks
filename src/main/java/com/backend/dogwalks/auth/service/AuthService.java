@@ -1,8 +1,8 @@
 package com.backend.dogwalks.auth.service;
 
-import com.backend.dogwalks.auth.dto.UserRegisterMapper;
-import com.backend.dogwalks.auth.dto.UserRegisterRequest;
-import com.backend.dogwalks.auth.dto.UserRegisterResponse;
+import com.backend.dogwalks.auth.dto.RegisterMapper;
+import com.backend.dogwalks.auth.dto.RegisterRequest;
+import com.backend.dogwalks.auth.dto.RegisterResponse;
 import com.backend.dogwalks.exception.custom_exception.EntityAlreadyExistsException;
 import com.backend.dogwalks.user.entity.CustomUser;
 import com.backend.dogwalks.user.enums.Role;
@@ -20,16 +20,16 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserRegisterResponse registerUser(UserRegisterRequest request) {
+    public RegisterResponse registerUser(RegisterRequest request) {
         if (customUserRepository.existsByEmail(request.email())) {
             throw new EntityAlreadyExistsException("E-mail " + request.email() + " is already registered");
         }
 
-        CustomUser newUser = UserRegisterMapper.toEntity(request);
+        CustomUser newUser = RegisterMapper.toEntity(request);
         newUser.setPassword(passwordEncoder.encode(request.password()));
         newUser.setRole(Role.USER);
         CustomUser saveUser = customUserRepository.save(newUser);
 
-        return UserRegisterMapper.toDto(saveUser);
+        return RegisterMapper.toDto(saveUser);
     }
 }
