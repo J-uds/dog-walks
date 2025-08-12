@@ -23,8 +23,9 @@ public class JwtUtil {
     @Value("${app.jwt.expiration}")
     private Long jwtExpiration;
 
-    public String generateToken(CustomUserDetails userDetail) {
-        return buildToken(userDetail, jwtExpiration);
+    private SecretKey getSignKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(jwtSecretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     private String buildToken(CustomUserDetails userDetail, long jwtExpiration) {
@@ -36,6 +37,10 @@ public class JwtUtil {
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSignKey())
                 .compact();
+    }
+
+    public String generateToken(CustomUserDetails userDetail) {
+        return buildToken(userDetail, jwtExpiration);
     }
 
     public String extractUsername(String token) {
@@ -51,10 +56,7 @@ public class JwtUtil {
         }
     }
 
-    private SecretKey getSignKey() {
-        byte[] bytes = Decoders.BASE64.decode(jwtSecretKey);
-        return Keys.hmacShaKeyFor(bytes);
-    }
+
 
     private Claims extractAllClaims(String token) {
         return Jwts
