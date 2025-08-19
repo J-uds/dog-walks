@@ -14,6 +14,7 @@ import com.backend.dogwalks.user.enums.Role;
 import com.backend.dogwalks.user.repository.CustomUserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,15 +48,19 @@ public class AuthService {
     }
 
     public LoginResponse loginUser(LoginRequest request) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+        try {
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
 
-        CustomUserDetails userDetails =  (CustomUserDetails) authentication.getPrincipal();
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        String token = jwtUtil.generateToken(userDetails);
-        String tokenType = "Bearer";
+            String token = jwtUtil.generateToken(userDetails);
+            String tokenType = "Bearer";
 
-        CustomUser user = customUserRepository.findUserByEmail(userDetails.getUsername()).orElseThrow(() -> new EntityNotFoundException("Authenticated user with e-mail: " + userDetails.getUsername() + ", not found in data base"));
+            CustomUser user = customUserRepository.findUserByEmail(userDetails.getUsername()).orElseThrow(() -> new EntityNotFoundException("Authenticated user with e-mail: " + userDetails.getUsername() + ", not found in data base"));
 
-       return LoginMapper.toDto(token, tokenType, user);
+            return LoginMapper.toDto(token, tokenType, user);
+        } catch (BadCredentialsException exception) {
+            throw new InvalidCredentialsException("Incorrect e-amil or password");
+        }
     }
 }
