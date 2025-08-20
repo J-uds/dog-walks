@@ -7,6 +7,7 @@ import com.backend.dogwalks.auth.dto.register.RegisterResponse;
 import com.backend.dogwalks.exception.custom_exception.EntityAlreadyExistsException;
 import com.backend.dogwalks.exception.custom_exception.EntityNotFoundException;
 import com.backend.dogwalks.exception.custom_exception.InvalidCredentialsException;
+import com.backend.dogwalks.exception.custom_exception.UserNotActiveException;
 import com.backend.dogwalks.security.CustomUserDetails;
 import com.backend.dogwalks.security.jwt.JwtUtil;
 import com.backend.dogwalks.user.entity.CustomUser;
@@ -16,7 +17,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Nested;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -67,6 +67,7 @@ public class AuthServiceTest {
         mockUser.setPassword("encodedPassword");
         mockUser.setUserImgUrl("img.png");
         mockUser.setRole(Role.USER);
+        mockUser.setIsActive(true);
 
         mockUserDetails = new CustomUserDetails(mockUser);
     }
@@ -87,6 +88,7 @@ public class AuthServiceTest {
        assertEquals("maria@test.com", response.email());
        assertEquals("img.png", response.userImgUrl());
        assertEquals(Role.USER, response.role());
+       assertEquals(Boolean.TRUE, response.isActive());
 
        verify(customUserRepository, times(1)).existsByEmail(registerRequest.email());
        verify(passwordEncoder, times(1)).encode(registerRequest.password());
@@ -97,7 +99,8 @@ public class AuthServiceTest {
                user.getEmail().equals("maria@test.com") &&
                user.getPassword().equals("encodedPassword") &&
                user.getUserImgUrl().equals("img.png") &&
-               user.getRole().equals(Role.USER)));
+               user.getRole().equals(Role.USER) &&
+               Boolean.TRUE.equals(user.getIsActive())));
    }
 
    @Test
@@ -134,6 +137,7 @@ public class AuthServiceTest {
        assertEquals("Maria", response.username());
        assertEquals("maria@test.com", response.email());
        assertEquals(Role.USER, response.role());
+       assertEquals(Boolean.TRUE, response.isActive());
 
        verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
        verify(jwtUtil, times(1)).generateToken(mockUserDetails);
@@ -162,16 +166,36 @@ public class AuthServiceTest {
         Authentication authentication = new UsernamePasswordAuthenticationToken(mockUserDetails, null);
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
-        when(jwtUtil.generateToken(mockUserDetails)).thenReturn("test-jwt-token");
         when(customUserRepository.findUserByEmail(loginRequest.email())).thenReturn(Optional.empty());
 
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> authService.loginUser(loginRequest));
 
-       assertEquals("Authenticated user with e-mail: maria@test.com, not found in data base", exception.getMessage());
+        assertEquals("Authenticated user with e-mail: " + loginRequest.email() + ", not found in data base", exception.getMessage());
+
+        verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
+        verify(customUserRepository, times(1)).findUserByEmail(eq(loginRequest.email()));
+        verifyNoInteractions(jwtUtil);
+   }
+
+   @Test
+   @DisplayName("Should throw UserNotActiveException when user is deactivated")
+   void loginUser_shouldThrowException_whenUserIsNotActive() {
+
+       Authentication authentication = new UsernamePasswordAuthenticationToken(mockUserDetails, null);
+
+       CustomUser inactiveUser = new CustomUser();
+       inactiveUser.setIsActive(false);
+
+       when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
+       when(customUserRepository.findUserByEmail(loginRequest.email())).thenReturn(Optional.of(inactiveUser));
+
+       UserNotActiveException exception = assertThrows(UserNotActiveException.class, () -> authService.loginUser(loginRequest));
+
+       assertEquals("User account is deactivated", exception.getMessage());
 
        verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
-       verify(jwtUtil, times(1)).generateToken(mockUserDetails);
-       verify(customUserRepository, times(1)).findUserByEmail(loginRequest.email());
+       verify(customUserRepository, times(1)).findUserByEmail(eq(loginRequest.email()));
+       verifyNoInteractions(jwtUtil);
    }
 
    @Test
@@ -181,13 +205,14 @@ public class AuthServiceTest {
         Authentication authentication = new UsernamePasswordAuthenticationToken(mockUserDetails, null);
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
+        when(customUserRepository.findUserByEmail(loginRequest.email())).thenReturn(Optional.of(mockUser));
         when(jwtUtil.generateToken(mockUserDetails)).thenThrow(new RuntimeException("JWT generation failed"));
 
         assertThrows(RuntimeException.class, () -> authService.loginUser(loginRequest));
 
         verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
+        verify(customUserRepository, times(1)).findUserByEmail(eq(loginRequest.email()));
         verify(jwtUtil, times(1)).generateToken(mockUserDetails);
-        verify(customUserRepository, never()).findUserByEmail(anyString());
     }
 
    @Test

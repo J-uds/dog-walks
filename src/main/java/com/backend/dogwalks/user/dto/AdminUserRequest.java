@@ -15,6 +15,7 @@ public record AdminUserRequest(
         @Pattern(message = "Password must be at least 12 characters long, including a number, one uppercase letter, one lowercase letter and one special character", regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=.])(?=\\S+$).{12,}$")
         String password,
         String userImgUrl,
-        Role role
+        Role role,
+        Boolean isActive
 ) {
 }

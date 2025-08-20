@@ -7,6 +7,7 @@ public record RegisterResponse(
         String username,
         String email,
         String userImgUrl,
-        Role role
+        Role role,
+        Boolean isActive
 ){
 }

@@ -8,6 +8,7 @@ public record LoginResponse(
         Long id,
         String username,
         String email,
-        Role role
+        Role role,
+        Boolean isActive
 ) {
 }

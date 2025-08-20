@@ -36,8 +36,8 @@ public class CustomUser {
     @Column(nullable = false)
     private Role role;
 
-    /*@Column(nullable = false)
-    private Boolean isActive;*/
+    @Column(nullable = false)
+    private Boolean isActive = true;
 
     public CustomUser(String username, String email, String password, String userImgUrl) {
         this.username = username;
@@ -46,12 +46,13 @@ public class CustomUser {
         this.userImgUrl = userImgUrl;
     }
 
-    public CustomUser(String username, String email, String password, String userImgUrl, Role role) {
+    public CustomUser(String username, String email, String password, String userImgUrl, Role role, Boolean isActive) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.userImgUrl = userImgUrl;
         this.role = role;
+        this.isActive = isActive;
     }
 }
 

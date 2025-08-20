@@ -9,6 +9,7 @@ import com.backend.dogwalks.auth.dto.register.RegisterResponse;
 import com.backend.dogwalks.exception.custom_exception.EntityAlreadyExistsException;
 import com.backend.dogwalks.exception.custom_exception.EntityNotFoundException;
 import com.backend.dogwalks.exception.custom_exception.InvalidCredentialsException;
+import com.backend.dogwalks.exception.custom_exception.UserNotActiveException;
 import com.backend.dogwalks.security.CustomUserDetails;
 import com.backend.dogwalks.security.jwt.JwtUtil;
 import com.backend.dogwalks.user.entity.CustomUser;
@@ -54,10 +55,14 @@ public class AuthService {
 
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
+            CustomUser user = customUserRepository.findUserByEmail(userDetails.getUsername()).orElseThrow(() -> new EntityNotFoundException("Authenticated user with e-mail: " + userDetails.getUsername() + ", not found in data base"));
+
+            if (!user.getIsActive()) {
+                throw new UserNotActiveException("User account is deactivated");
+            }
+
             String token = jwtUtil.generateToken(userDetails);
             String tokenType = "Bearer";
-
-            CustomUser user = customUserRepository.findUserByEmail(userDetails.getUsername()).orElseThrow(() -> new EntityNotFoundException("Authenticated user with e-mail: " + userDetails.getUsername() + ", not found in data base"));
 
             return LoginMapper.toDto(token, tokenType, user);
         } catch (BadCredentialsException exception) {

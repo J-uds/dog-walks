@@ -9,7 +9,8 @@ public class AdminUserMapper {
                 adminUserRequest.email(),
                 adminUserRequest.password(),
                 adminUserRequest.userImgUrl(),
-                adminUserRequest.role()
+                adminUserRequest.role(),
+                adminUserRequest.isActive()
         );
     }
 

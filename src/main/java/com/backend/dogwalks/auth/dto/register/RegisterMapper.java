@@ -13,6 +13,6 @@ public class RegisterMapper {
     }
 
     public static RegisterResponse toDto (CustomUser user) {
-        return new RegisterResponse(user.getId(), user.getUsername(), user.getEmail(), user.getUserImgUrl(), user.getRole());
+        return new RegisterResponse(user.getId(), user.getUsername(), user.getEmail(), user.getUserImgUrl(), user.getRole(), user.getIsActive());
     }
 }
