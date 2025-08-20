@@ -2,6 +2,9 @@ package com.backend.dogwalks.user.entity;
 
 import com.backend.dogwalks.user.enums.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,6 +44,14 @@ public class CustomUser {
         this.email = email;
         this.password = password;
         this.userImgUrl = userImgUrl;
+    }
+
+    public CustomUser(String username, String email, String password, String userImgUrl, Role role) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.userImgUrl = userImgUrl;
+        this.role = role;
     }
 }
 
