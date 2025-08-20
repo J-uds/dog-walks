@@ -61,7 +61,7 @@ public class AuthService {
 
             return LoginMapper.toDto(token, tokenType, user);
         } catch (BadCredentialsException exception) {
-            throw new InvalidCredentialsException("Incorrect e-amil or password");
+            throw new InvalidCredentialsException("Incorrect e-mail or password");
         }
     }
 }
