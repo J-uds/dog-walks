@@ -1,4 +1,4 @@
-package com.backend.dogwalks.user.dto;
+package com.backend.dogwalks.user.dto.user;
 
 public record CustomUserResponse(
         Long id,

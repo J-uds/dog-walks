@@ -1,4 +1,4 @@
-package com.backend.dogwalks.user.dto;
+package com.backend.dogwalks.user.dto.admin;
 
 import com.backend.dogwalks.user.enums.Role;
 import jakarta.validation.constraints.Email;

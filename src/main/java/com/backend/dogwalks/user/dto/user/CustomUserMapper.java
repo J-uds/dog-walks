@@ -1,5 +1,5 @@
 
-package com.backend.dogwalks.user.dto;
+package com.backend.dogwalks.user.dto.user;
 
 import com.backend.dogwalks.user.entity.CustomUser;
 
