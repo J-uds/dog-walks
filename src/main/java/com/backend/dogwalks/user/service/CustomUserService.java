@@ -1,11 +1,11 @@
 package com.backend.dogwalks.user.service;
 
 import com.backend.dogwalks.exception.custom_exception.EntityAlreadyExistsException;
+import com.backend.dogwalks.exception.custom_exception.EntityNotFoundException;
 import com.backend.dogwalks.exception.custom_exception.InvalidCredentialsException;
 import com.backend.dogwalks.user.dto.user.*;
 import com.backend.dogwalks.user.entity.CustomUser;
 import com.backend.dogwalks.user.repository.CustomUserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
