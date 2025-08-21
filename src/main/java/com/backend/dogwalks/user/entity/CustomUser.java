@@ -51,9 +51,9 @@ public class CustomUser {
         this.isActive = isActive;
     }
 
-    public CustomUser(String username, String userImgUrl) {
+   /* public CustomUser(String username, String userImgUrl) {
         this.username = username;
         this.userImgUrl = userImgUrl;
-    }
+    }*/
 }
 
