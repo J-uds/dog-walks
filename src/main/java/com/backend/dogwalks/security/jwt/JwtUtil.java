@@ -30,6 +30,7 @@ public class JwtUtil {
         return Jwts
                 .builder()
                 .subject(userDetail.getUsername())
+                .claim("id", userDetail.getId())
                 .claim("role", userDetail.getAuthorities().toString())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
@@ -52,6 +53,10 @@ public class JwtUtil {
 
     public String extractEmail(String token) {
         return extractAllClaims(token).getSubject();
+    }
+
+    public Long extractId(String token) {
+        return extractAllClaims(token).get("id", Long.class);
     }
 
     public boolean isValidToken(String token) {

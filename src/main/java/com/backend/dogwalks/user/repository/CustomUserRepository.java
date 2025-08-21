@@ -13,4 +13,6 @@ public interface CustomUserRepository extends JpaRepository <CustomUser, Long> {
     boolean existsByEmail(String email);
     Optional<CustomUser> findByUsername(String username);
     int countByRole(Role role);
+    Optional<CustomUser> findByIdAndIsActive(Long id, Boolean isActive);
+    Optional<CustomUser> findById(Long id);
 }

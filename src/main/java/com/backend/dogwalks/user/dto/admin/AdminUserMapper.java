@@ -1,4 +1,4 @@
-package com.backend.dogwalks.user.dto;
+package com.backend.dogwalks.user.dto.admin;
 
 import com.backend.dogwalks.user.entity.CustomUser;
 
@@ -7,14 +7,13 @@ public class AdminUserMapper {
         return new CustomUser(
                 adminUserRequest.username(),
                 adminUserRequest.email(),
-                adminUserRequest.password(),
                 adminUserRequest.userImgUrl(),
                 adminUserRequest.role(),
                 adminUserRequest.isActive()
         );
     }
 
-    public static CustomUserResponse toDto(CustomUser user) {
-        return new CustomUserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getUserImgUrl(), user.getRole());
+    public static AdminUserResponse toDto(CustomUser user) {
+        return new AdminUserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getUserImgUrl(), user.getRole(), user.getIsActive());
     }
 }

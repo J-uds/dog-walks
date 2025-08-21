@@ -1,12 +1,13 @@
-package com.backend.dogwalks.user.dto;
+package com.backend.dogwalks.user.dto.admin;
 
 import com.backend.dogwalks.user.enums.Role;
 
-public record CustomUserResponse(
+public record AdminUserResponse(
         Long id,
         String username,
         String email,
         String userImgUrl,
-        Role role
+        Role role,
+        Boolean isActive
 ) {
 }
