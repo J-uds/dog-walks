@@ -5,8 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 
 public record CustomUserUpdateEmailRequest(
 
-        @NotBlank
+        @NotBlank(message = "New e-mail is required")
         @Email(message = "Invalid email format", regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
-        String email
+        String newEmail
 ) {
 }
