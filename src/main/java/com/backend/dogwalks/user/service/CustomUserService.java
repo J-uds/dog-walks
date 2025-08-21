@@ -92,8 +92,8 @@ public class CustomUserService {
         customUserRepository.save(user);
     }
 
+    @Transactional(readOnly = true)
     private CustomUser getActiveUserByIdOrThrow(Long id) {
         return customUserRepository.findByIdAndIsActive(id, true).orElseThrow(() -> new EntityNotFoundException("Active user with id: " + id + " not found"));
     }
-
 }
