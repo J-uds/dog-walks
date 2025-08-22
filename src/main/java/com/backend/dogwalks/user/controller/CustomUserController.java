@@ -62,7 +62,7 @@ public class CustomUserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/profile/deactivate")
+    @DeleteMapping("/profile/deactivate")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Void> deactivateMyProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
 
