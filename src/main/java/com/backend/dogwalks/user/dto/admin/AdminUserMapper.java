@@ -16,4 +16,22 @@ public class AdminUserMapper {
     public static AdminUserResponse toDto(CustomUser user) {
         return new AdminUserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getUserImgUrl(), user.getRole(), user.getIsActive());
     }
+
+    public static void updateFromAdminRequest(CustomUser user, AdminUserRequest request) {
+        if (request.username() != null) {
+            user.setUsername(request.username());
+        }
+        if (request.email() != null) {
+            user.setEmail(request.email());
+        }
+        if (request.userImgUrl() != null) {
+            user.setUserImgUrl(request.userImgUrl());
+        }
+        if (request.role() != null) {
+            user.setRole(request.role());
+        }
+        if (request.isActive() != null) {
+            user.setIsActive(request.isActive());
+        }
+    }
 }
