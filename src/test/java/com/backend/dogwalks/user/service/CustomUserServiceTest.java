@@ -18,7 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -113,8 +112,8 @@ public class CustomUserServiceTest {
     class UpdateMyProfileTests {
 
         @Test
-        @DisplayName("Should update username when provided and different")
-        void shouldUpdateUsername_whenProvidedAndDifferent() {
+        @DisplayName("Should update username when provided")
+        void shouldUpdateUsername_whenProvided() {
 
             String newUsername = "Pepa";
             CustomUserUpdateRequest request = new CustomUserUpdateRequest(newUsername, null);
@@ -132,8 +131,8 @@ public class CustomUserServiceTest {
         }
 
         @Test
-        @DisplayName("Should update image URL when provided and different")
-        void shouldUpdateImageUrl_whenProvidedAndDifferent() {
+        @DisplayName("Should update image URL when provided")
+        void shouldUpdateImageUrl_whenProvided() {
 
             String newImageUrl = "img2.png";
             CustomUserUpdateRequest request = new CustomUserUpdateRequest(null, newImageUrl);
@@ -147,6 +146,24 @@ public class CustomUserServiceTest {
             assertEquals(newImageUrl, testUser.getUserImgUrl());
 
             verify(customUserRepository, times(1)).findByIdAndIsActive(USER_ID, true);
+            verify(customUserRepository, times(1)).save(testUser);
+        }
+
+        @Test
+        @DisplayName("Should not update when fields are null")
+        void shouldNotUpdate_whenFieldsAreNull() {
+            String originalUsername = testUser.getUsername();
+            String originalUserImgUrl = testUser.getUserImgUrl();
+            CustomUserUpdateRequest request = new CustomUserUpdateRequest(null, null);
+
+            when(customUserRepository.findByIdAndIsActive(USER_ID, true)).thenReturn(Optional.of(testUser));
+            when(customUserRepository.save(any(CustomUser.class))).thenReturn(testUser);
+
+            customUserService.updateMyProfile(USER_ID, request);
+
+            assertEquals(originalUsername, testUser.getUsername());
+            assertEquals(originalUserImgUrl, testUser.getUserImgUrl());
+
             verify(customUserRepository, times(1)).save(testUser);
         }
 
@@ -172,8 +189,8 @@ public class CustomUserServiceTest {
     class UpdateMyEmailTests {
 
         @Test
-        @DisplayName("Should update e-mail when password is correct and e-mail is available")
-        void shouldUpdateEmail_whenPasswordIsCorrectAndEmailIsAvailable() {
+        @DisplayName("Should update e-mail when all validations pass")
+        void shouldUpdateEmail_whenAllValidationsPass() {
 
             String newEmail = "new@test.com";
             String rawPassword = "rawPassword9.";
@@ -235,6 +252,24 @@ public class CustomUserServiceTest {
             verify(customUserRepository, times(1)).existsByEmail(existingEmail);
             verify(customUserRepository, never()).save(any());
         }
+
+        @Test
+        @DisplayName("Should throw InvalidCredentialsException when new e-mail equals current e-mail")
+        void shouldThrowInvalidCredentialsException_whenNewEmailEqualsCurrentEmail() {
+
+            String rawPassword = "rawPassword9.";
+            CustomUserUpdateEmailRequest request = new CustomUserUpdateEmailRequest(EMAIL, rawPassword);
+
+            when(customUserRepository.findByIdAndIsActive(USER_ID, true)).thenReturn(Optional.of(testUser));
+            when(passwordEncoder.matches(rawPassword, PASSWORD)).thenReturn(true);
+            when(customUserRepository.existsByEmail(EMAIL)).thenReturn(false);
+
+            InvalidCredentialsException exception = assertThrows(InvalidCredentialsException.class, () -> customUserService.updateMyEmail(USER_ID, request));
+
+            assertEquals("New e-mail must be different from current e-mail", exception.getMessage());
+
+            verify(customUserRepository, never()).save(any());
+        }
     }
 
     @Nested
@@ -252,6 +287,7 @@ public class CustomUserServiceTest {
 
             when(customUserRepository.findByIdAndIsActive(USER_ID, true)).thenReturn(Optional.of(testUser));
             when(passwordEncoder.matches(oldPassword, PASSWORD)).thenReturn(true);
+            when(passwordEncoder.matches(newPassword, PASSWORD)).thenReturn(false);
             when(passwordEncoder.encode(newPassword)).thenReturn(encodedPassword);
 
             customUserService.updateMyPassword(USER_ID, request);
@@ -299,17 +335,39 @@ public class CustomUserServiceTest {
 
             InvalidCredentialsException exception = assertThrows(InvalidCredentialsException.class, () -> customUserService.updateMyPassword(USER_ID, request));
 
-            assertEquals("New Password and confirmation do not match", exception.getMessage());
+            assertEquals("New password and confirmation do not match", exception.getMessage());
 
             verify(customUserRepository, times(1)).findByIdAndIsActive(USER_ID, true);
             verify(passwordEncoder, times(1)).matches(oldPassword, PASSWORD);
             verify(passwordEncoder, never()).encode(anyString());
             verify(customUserRepository,never()).save(any());
         }
+
+        @Test
+        @DisplayName("Should throw InvalidCredentialsException when new password equals current password")
+        void shouldThrowInvalidCredentialsException_whenNewPasswordsEqualsCurrentPassword() {
+
+            String oldPassword = "oldPassword7.";
+            String samePassword = "oldPassword7.";
+            CustomUserUpdatePasswordRequest request = new CustomUserUpdatePasswordRequest(oldPassword, samePassword, samePassword);
+
+            when(customUserRepository.findByIdAndIsActive(USER_ID, true)).thenReturn(Optional.of(testUser));
+            when(passwordEncoder.matches(oldPassword, PASSWORD)).thenReturn(true);
+            when(passwordEncoder.matches(samePassword, PASSWORD)).thenReturn(true);
+
+            InvalidCredentialsException exception = assertThrows(InvalidCredentialsException.class, () -> customUserService.updateMyPassword(USER_ID, request));
+
+            assertEquals("New password must be different from current password", exception.getMessage());
+
+            verify(customUserRepository, times(1)).findByIdAndIsActive(USER_ID, true);
+            verify(passwordEncoder, times(2)).matches(oldPassword, PASSWORD);
+            verify(passwordEncoder, never()).encode(anyString());
+            verify(customUserRepository,never()).save(any());
+        }
     }
 
     @Nested
-    @DisplayName("Deactivete My Profile Tests")
+    @DisplayName("Deactivate My Profile Tests")
     class DeactivateMyProfileTests {
 
         @Test
@@ -338,37 +396,6 @@ public class CustomUserServiceTest {
 
             verify(customUserRepository, times(1)).findByIdAndIsActive(USER_ID, true);
             verify(customUserRepository, never()).save(any());
-        }
-    }
-
-    @Nested
-    @DisplayName("Helper Method Tests")
-    class HelperMethodTests {
-
-        @Test
-        @DisplayName("getActiveUserByIdOrThrow should return user when found and active")
-        void getActiveUserByIdOrThrow_shouldReturnUser_whenFoundAndActive() {
-
-            when(customUserRepository.findByIdAndIsActive(USER_ID, true)).thenReturn(Optional.of(testUser));
-
-            CustomUserResponse result = customUserService.getMyProfile(USER_ID);
-
-            assertNotNull(result);
-
-            verify(customUserRepository,times(1)).findByIdAndIsActive(USER_ID, true);
-        }
-
-        @Test
-        @DisplayName("getActiveUserByIdOrThrow should throw exception when user not found")
-        void getActiveUserByIdOrThrow_shouldThrowException_whenUserNotFound() {
-
-            when(customUserRepository.findByIdAndIsActive(USER_ID, true)).thenReturn(Optional.empty());
-
-            EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> customUserService.getMyProfile(USER_ID));
-
-            assertEquals("Active user with id: " + USER_ID + " not found", exception.getMessage());
-
-            verify(customUserRepository,times(1)).findByIdAndIsActive(USER_ID, true);
         }
     }
 }

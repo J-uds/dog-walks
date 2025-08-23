@@ -85,7 +85,7 @@ public class CustomUserService {
         }
 
         if (user.getEmail().equals(request.newEmail())) {
-            throw new InvalidCredentialsException("New e-amil must be different from the current e-mail");
+            throw new InvalidCredentialsException("New e-mail must be different from current e-mail");
         }
     }
 
@@ -96,7 +96,7 @@ public class CustomUserService {
         }
 
         if(!request.newPassword().equals(request.confirmPassword())) {
-            throw new InvalidCredentialsException("New Password and confirmation do not match");
+            throw new InvalidCredentialsException("New password and confirmation do not match");
         }
 
         if(passwordEncoder.matches(request.newPassword(), user.getPassword())) {
