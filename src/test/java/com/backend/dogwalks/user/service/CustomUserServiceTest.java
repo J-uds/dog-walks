@@ -398,4 +398,5 @@ public class CustomUserServiceTest {
             verify(customUserRepository, never()).save(any());
         }
     }
+
 }
