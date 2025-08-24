@@ -1,10 +1,14 @@
 package com.backend.dogwalks.user.entity;
 
 import com.backend.dogwalks.user.enums.Role;
+import com.backend.dogwalks.walk.entity.Walk;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -35,6 +39,9 @@ public class CustomUser {
 
     @Column(nullable = false)
     private Boolean isActive = true;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Walk> walks = new ArrayList<>();
 
     public CustomUser(String username, String email, String password, String userImgUrl) {
         this.username = username;
