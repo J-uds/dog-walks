@@ -1,6 +1,8 @@
 package com.backend.dogwalks.user.admin;
 
+import com.backend.dogwalks.exception.custom_exception.EntityAlreadyExistsException;
 import com.backend.dogwalks.exception.custom_exception.EntityNotFoundException;
+import com.backend.dogwalks.user.dto.admin.AdminUserRequest;
 import com.backend.dogwalks.user.dto.admin.AdminUserResponse;
 import com.backend.dogwalks.user.entity.CustomUser;
 import com.backend.dogwalks.user.enums.Role;
@@ -158,6 +160,129 @@ public class AdminServiceTest {
             assertEquals("User with id: " + USER_ID + " not found", exception.getMessage());
 
             verify(customUserRepository, times(1)).findById(USER_ID);
+        }
+    }
+
+    @Nested
+    @DisplayName("Update User Tests")
+    class UpdateUserTests {
+
+        @Test
+        @DisplayName("UpdateUser should update user successfully")
+        void updateUserShouldUpdateUserSuccessfully() {
+
+            AdminUserRequest request = new AdminUserRequest(
+                    "updatedUser",
+                    "update@test.com",
+                    "UpdateImg.png",
+                    Role.USER,
+                    true);
+
+            when(customUserRepository.findById(USER_ID)).thenReturn(Optional.of(testUser));
+            when(customUserRepository.existsByEmailAndIdNot(request.email(), USER_ID)).thenReturn(false);
+            when(customUserRepository.save(any(CustomUser.class))).thenReturn(testUser);
+
+            AdminUserResponse result = adminService.updateUser(USER_ID, request);
+
+            assertNotNull(result);
+            assertEquals("updatedUser", result.username());
+            assertEquals("update@test.com", result.email());
+            assertEquals("UpdateImg.png", result.userImgUrl());
+            assertEquals(Role.USER, result.role());
+            assertTrue(result.isActive());
+
+            verify(customUserRepository, times(1)).findById(USER_ID);
+            verify(customUserRepository, times(1)).existsByEmailAndIdNot(request.email(), USER_ID);
+            verify(customUserRepository, times(1)).save(testUser);
+        }
+
+        @Test
+        @DisplayName("UpdateUser should throw EntityNotFoundException when user not found")
+        void UpdateUserShouldThrowException_whenUserNotFound() {
+
+            AdminUserRequest request = new AdminUserRequest(
+                    "updatedUser",
+                    "update@test.com",
+                    "UpdateImg.png",
+                    Role.USER,
+                    true);
+
+            when(customUserRepository.findById(USER_ID)).thenReturn(Optional.empty());
+
+            EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> adminService.getUserById(USER_ID));
+
+            assertEquals("User with id: " + USER_ID + " not found", exception.getMessage());
+
+            verify(customUserRepository, times(1)).findById(USER_ID);
+            verify(customUserRepository, never()).save(any());
+        }
+
+        @Test
+        @DisplayName("UpdateUser should throw EntityAlreadyExistException when email already exist")
+        void UpdateUserShouldThrowException_whenEmailAlreadyExist() {
+
+            AdminUserRequest request = new AdminUserRequest(
+                    "updatedUser",
+                    "update@test.com",
+                    "UpdateImg.png",
+                    Role.USER,
+                    true);
+
+            when(customUserRepository.findById(USER_ID)).thenReturn(Optional.of(testUser));
+            when(customUserRepository.existsByEmailAndIdNot(request.email(), USER_ID)).thenReturn(true);
+
+            EntityAlreadyExistsException exception = assertThrows(EntityAlreadyExistsException.class, () -> adminService.updateUser(USER_ID, request));
+
+            assertEquals("E-mail " + request.email() + " is already registered", exception.getMessage());
+
+            verify(customUserRepository, times(1)).findById(USER_ID);
+            verify(customUserRepository, never()).save(any());
+        }
+
+        @Test
+        @DisplayName("UpdateUser should throw IllegalStateException when trying to change role of last admin")
+        void UpdateUserShouldThrowException_whenTryingToChangeRoleOfLastAdmin() {
+
+            AdminUserRequest request = new AdminUserRequest(
+                    "updatedUser",
+                    "update@test.com",
+                    "UpdateImg.png",
+                    Role.USER,
+                    true);
+
+            when(customUserRepository.findById(ADMIN_ID)).thenReturn(Optional.of(testAdmin));
+            when(customUserRepository.existsByEmailAndIdNot(request.email(), ADMIN_ID)).thenReturn(false);
+            when(customUserRepository.countByRoleAndIsActive(Role.ADMIN, true)).thenReturn(1L);
+
+            IllegalStateException exception = assertThrows(IllegalStateException.class, () -> adminService.updateUser(ADMIN_ID, request));
+
+            assertEquals("Cannot change the role of the last active admin", exception.getMessage());
+
+            verify(customUserRepository, times(1)).findById(ADMIN_ID);
+            verify(customUserRepository, never()).save(any());
+        }
+
+        @Test
+        @DisplayName("UpdateUser should throw IllegalStateException when trying to deactivate last admin")
+        void UpdateUserShouldThrowException_whenTryingToDeactivateLastAdmin() {
+
+            AdminUserRequest request = new AdminUserRequest(
+                    "updatedUser",
+                    "update@test.com",
+                    "UpdateImg.png",
+                    Role.ADMIN,
+                    false);
+
+            when(customUserRepository.findById(ADMIN_ID)).thenReturn(Optional.of(testAdmin));
+            when(customUserRepository.existsByEmailAndIdNot(request.email(), ADMIN_ID)).thenReturn(false);
+            when(customUserRepository.countByRoleAndIsActive(Role.ADMIN, true)).thenReturn(1L);
+
+            IllegalStateException exception = assertThrows(IllegalStateException.class, () -> adminService.updateUser(ADMIN_ID, request));
+
+            assertEquals("Cannot deactivate the last active admin", exception.getMessage());
+
+            verify(customUserRepository, times(1)).findById(ADMIN_ID);
+            verify(customUserRepository, never()).save(any());
         }
     }
 }
