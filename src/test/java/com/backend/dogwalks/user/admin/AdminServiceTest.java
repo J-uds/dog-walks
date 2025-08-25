@@ -85,8 +85,8 @@ public class AdminServiceTest {
     class GetUsersTests {
 
         @Test
-        @DisplayName("Should return paginated users with walks")
-        void shouldReturnPaginatedUsersWithWalks() {
+        @DisplayName("GetAllUsersPaginated should return paginated users with walks")
+        void getAllUsersPaginatedShouldReturnPaginatedUsersWithWalks() {
 
             int page = 0;
             int size = 10;
@@ -125,8 +125,8 @@ public class AdminServiceTest {
         }
 
         @Test
-        @DisplayName("Should return user by id")
-        void shouldReturnUserById() {
+        @DisplayName("GetUserById should return user by id")
+        void getUserByIdShouldReturnUserById() {
 
             when(customUserRepository.findById(USER_ID)).thenReturn(Optional.of(testUser));
 
@@ -198,7 +198,7 @@ public class AdminServiceTest {
 
         @Test
         @DisplayName("UpdateUser should throw EntityNotFoundException when user not found")
-        void UpdateUserShouldThrowException_whenUserNotFound() {
+        void updateUserShouldThrowException_whenUserNotFound() {
 
             AdminUserRequest request = new AdminUserRequest(
                     "updatedUser",
@@ -219,7 +219,7 @@ public class AdminServiceTest {
 
         @Test
         @DisplayName("UpdateUser should throw EntityAlreadyExistException when email already exist")
-        void UpdateUserShouldThrowException_whenEmailAlreadyExist() {
+        void updateUserShouldThrowException_whenEmailAlreadyExist() {
 
             AdminUserRequest request = new AdminUserRequest(
                     "updatedUser",
@@ -241,7 +241,7 @@ public class AdminServiceTest {
 
         @Test
         @DisplayName("UpdateUser should throw IllegalStateException when trying to change role of last admin")
-        void UpdateUserShouldThrowException_whenTryingToChangeRoleOfLastAdmin() {
+        void updateUserShouldThrowException_whenTryingToChangeRoleOfLastAdmin() {
 
             AdminUserRequest request = new AdminUserRequest(
                     "updatedUser",
@@ -264,7 +264,7 @@ public class AdminServiceTest {
 
         @Test
         @DisplayName("UpdateUser should throw IllegalStateException when trying to deactivate last admin")
-        void UpdateUserShouldThrowException_whenTryingToDeactivateLastAdmin() {
+        void updateUserShouldThrowException_whenTryingToDeactivateLastAdmin() {
 
             AdminUserRequest request = new AdminUserRequest(
                     "updatedUser",
@@ -283,6 +283,52 @@ public class AdminServiceTest {
 
             verify(customUserRepository, times(1)).findById(ADMIN_ID);
             verify(customUserRepository, never()).save(any());
+        }
+    }
+
+    @Nested
+    @DisplayName("Delete User Tests")
+    class DeleteUserTests {
+
+        @Test
+        @DisplayName("DeleteUser should delete user successfully")
+        void deleteUserShouldDeleteUserSuccessfully() {
+
+            when(customUserRepository.findById(USER_ID)).thenReturn(Optional.of(testUser));
+
+            adminService.deleteUser(USER_ID);
+
+            verify(customUserRepository, times(1)).findById(USER_ID);
+            verify(customUserRepository, times(1)).delete(testUser);
+        }
+
+        @Test
+        @DisplayName("DeleteUser should throw EntityNotFoundException when user not found")
+        void deleteUserShouldThrowException_whenUserNotFound() {
+
+            when(customUserRepository.findById(USER_ID)).thenReturn(Optional.empty());
+
+            EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> adminService.deleteUser(USER_ID));
+
+            assertEquals("User with id: " + USER_ID + " not found", exception.getMessage());
+
+            verify(customUserRepository, times(1)).findById(USER_ID);
+            verify(customUserRepository, never()).delete(any());
+        }
+
+        @Test
+        @DisplayName("DeleteUser should throw IllegalStateException when trying to delete last admin")
+        void deleteUserShouldThrowException_whenTryingToDeactivateLastAdmin() {
+
+            when(customUserRepository.findById(ADMIN_ID)).thenReturn(Optional.of(testAdmin));
+            when(customUserRepository.countByRoleAndIsActive(Role.ADMIN, true)).thenReturn(1L);
+
+            IllegalStateException exception = assertThrows(IllegalStateException.class, () -> adminService.deleteUser(ADMIN_ID));
+
+            assertEquals("Cannot delete the last active admin", exception.getMessage());
+
+            verify(customUserRepository, times(1)).findById(ADMIN_ID);
+            verify(customUserRepository, never()).delete(any());
         }
     }
 }
