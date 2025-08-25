@@ -1,6 +1,7 @@
 package com.backend.dogwalks.user.dto.admin;
 
 import com.backend.dogwalks.user.enums.Role;
+import com.backend.dogwalks.walk.dto.WalkResponse;
 
 import java.util.List;
 

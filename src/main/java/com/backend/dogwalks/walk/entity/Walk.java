@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -23,8 +24,10 @@ public class Walk {
     @Column(nullable = false, length = 100)
     private String title;
 
-    @Column(name = "date_time")
-    private LocalDateTime dateTime;
+    @CreationTimestamp
+    @Column(nullable = false, name = "created_at")
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private LocalDateTime createdAt;
 
     @Column(nullable = false, length = 100)
     private String location;
@@ -43,4 +46,13 @@ public class Walk {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private CustomUser user;
+
+    public Walk(String title, String location, Integer duration, String description, String walkImgUrl, CustomUser user) {
+        this.title = title;
+        this.location = location;
+        this.duration = duration;
+        this.description = description;
+        this.walkImgUrl = walkImgUrl;
+        this.user = user;
+    }
 }
