@@ -1,4 +1,4 @@
-package com.backend.dogwalks.user.admin;
+package com.backend.dogwalks.user.service;
 
 import com.backend.dogwalks.exception.custom_exception.EntityAlreadyExistsException;
 import com.backend.dogwalks.exception.custom_exception.EntityNotFoundException;
@@ -7,7 +7,6 @@ import com.backend.dogwalks.user.dto.admin.AdminUserResponse;
 import com.backend.dogwalks.user.entity.CustomUser;
 import com.backend.dogwalks.user.enums.Role;
 import com.backend.dogwalks.user.repository.CustomUserRepository;
-import com.backend.dogwalks.user.service.AdminService;
 import com.backend.dogwalks.walk.entity.Walk;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("Admin Service Unit Tests")
+@DisplayName("AdminService Unit Tests")
 public class AdminServiceTest {
 
     @Mock
