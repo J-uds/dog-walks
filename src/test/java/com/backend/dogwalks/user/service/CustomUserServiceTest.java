@@ -10,6 +10,7 @@ import com.backend.dogwalks.user.dto.user.CustomUserUpdateRequest;
 import com.backend.dogwalks.user.entity.CustomUser;
 import com.backend.dogwalks.user.enums.Role;
 import com.backend.dogwalks.user.repository.CustomUserRepository;
+import com.backend.dogwalks.walk.entity.Walk;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -20,6 +21,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,6 +42,7 @@ public class CustomUserServiceTest {
     private CustomUserService customUserService;
 
     private CustomUser testUser;
+    private Walk testWalk;
     private static final Long USER_ID = 1L;
     private static final String USERNAME = "Maria";
     private static final String EMAIL = "maria@test.com";
@@ -55,6 +59,7 @@ public class CustomUserServiceTest {
         testUser.setUserImgUrl(IMG_URL);
         testUser.setRole(Role.USER);
         testUser.setIsActive(true);
+        testUser.setWalks(new ArrayList<>());
     }
 
     @Nested
