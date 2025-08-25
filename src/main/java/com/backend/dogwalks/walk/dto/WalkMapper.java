@@ -25,8 +25,7 @@ public class WalkMapper {
                 walk.getDuration(),
                 walk.getDescription(),
                 walk.getIsActive(),
-                walk.getUser().getUsername(),
-                walk.getUser().getEmail()
+                walk.getUser().getUsername()
         );
     }
 
