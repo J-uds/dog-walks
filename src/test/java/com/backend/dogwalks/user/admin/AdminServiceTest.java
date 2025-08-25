@@ -1,5 +1,6 @@
 package com.backend.dogwalks.user.admin;
 
+import com.backend.dogwalks.exception.custom_exception.EntityNotFoundException;
 import com.backend.dogwalks.user.dto.admin.AdminUserResponse;
 import com.backend.dogwalks.user.entity.CustomUser;
 import com.backend.dogwalks.user.enums.Role;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -99,14 +101,63 @@ public class AdminServiceTest {
             assertNotNull(result);
             assertEquals(2, result.getContent().size());
 
-            AdminUserResponse adminResponse = result.getContent().get(0);
-            assertEquals(USER_ID, adminResponse.id());
-            assertEquals(USERNAME, adminResponse.username());
-            assertEquals(EMAIL, adminResponse.email());
-            assertEquals(IMG_URL, adminResponse.userImgUrl());
-            assertEquals(Role.USER, adminResponse.userImgUrl());
-            assertTrue(adminResponse.isActive());
-            assertEquals(1, adminResponse.walks().size());
+            AdminUserResponse testUserResponse = result.getContent().getFirst();
+            assertEquals(USER_ID, testUserResponse.id());
+            assertEquals(USERNAME, testUserResponse.username());
+            assertEquals(EMAIL, testUserResponse.email());
+            assertEquals(IMG_URL, testUserResponse.userImgUrl());
+            assertEquals(Role.USER, testUserResponse.role());
+            assertTrue(testUserResponse.isActive());
+            assertEquals(1, testUserResponse.walks().size());
+
+            AdminUserResponse testAdminResponse = result.getContent().get(1);
+            assertEquals(ADMIN_ID, testAdminResponse.id());
+            assertEquals(ADMIN_USERNAME, testAdminResponse.username());
+            assertEquals(ADMIN_EMAIL, testAdminResponse.email());
+            assertEquals("admin.png", testAdminResponse.userImgUrl());
+            assertEquals(Role.ADMIN, testAdminResponse.role());
+            assertTrue(testAdminResponse.isActive());
+            assertEquals(0, testAdminResponse.walks().size());
+
+            verify(customUserRepository, times(1)).findAll(any(Pageable.class));
+        }
+
+        @Test
+        @DisplayName("Should return user by id")
+        void shouldReturnUserById() {
+
+            when(customUserRepository.findById(USER_ID)).thenReturn(Optional.of(testUser));
+
+            AdminUserResponse result = adminService.getUserById(USER_ID);
+
+            assertNotNull(result);
+            assertEquals(USER_ID, result.id());
+            assertEquals(USERNAME, result.username());
+            assertEquals(EMAIL, result.email());
+            assertEquals(IMG_URL, result.userImgUrl());
+            assertEquals(Role.USER, result.role());
+            assertTrue(result.isActive());
+
+            assertNotNull(result.walks());
+            assertEquals(1, result.walks().size());
+            assertEquals(1L, result.walks().getFirst().id());
+            assertEquals("test walk", result.walks().getFirst().title());
+            assertEquals("Narnia", result.walks().getFirst().location());
+
+            verify(customUserRepository, times(1)).findById(USER_ID);
+        }
+
+        @Test
+        @DisplayName("GetUserById should throw EntityNotFoundException when user not found")
+        void getUserByIdShouldThrowEntityNotFoundException_whenUserNotFound() {
+
+            when(customUserRepository.findById(USER_ID)).thenReturn(Optional.empty());
+
+            EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> adminService.getUserById(USER_ID));
+
+            assertEquals("User with id: " + USER_ID + " not found", exception.getMessage());
+
+            verify(customUserRepository, times(1)).findById(USER_ID);
         }
     }
 }
