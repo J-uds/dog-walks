@@ -5,7 +5,7 @@ import com.backend.dogwalks.walk.entity.Walk;
 
 public class WalkMapper {
 
-    public Walk toEntity(WalkRequest request, CustomUser user) {
+    public static Walk toEntity(WalkRequest request, CustomUser user) {
         return new Walk(
                 request.title(),
                 request.location(),
@@ -16,7 +16,7 @@ public class WalkMapper {
         );
     }
 
-    public WalkResponse toDto(Walk walk) {
+    public static WalkResponse toDto(Walk walk) {
         return new WalkResponse(
                 walk.getId(),
                 walk.getTitle(),
@@ -27,6 +27,14 @@ public class WalkMapper {
                 walk.getIsActive(),
                 walk.getUser().getUsername(),
                 walk.getUser().getEmail()
+        );
+    }
+
+    public static WalkAdminResponse toDtoAdmin(Walk walk) {
+        return new WalkAdminResponse(
+                walk.getId(),
+                walk.getTitle(),
+                walk.getLocation()
         );
     }
 

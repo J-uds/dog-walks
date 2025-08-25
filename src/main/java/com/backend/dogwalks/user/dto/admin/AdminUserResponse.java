@@ -1,7 +1,7 @@
 package com.backend.dogwalks.user.dto.admin;
 
 import com.backend.dogwalks.user.enums.Role;
-import com.backend.dogwalks.walk.dto.WalkResponse;
+import com.backend.dogwalks.walk.dto.WalkAdminResponse;
 
 import java.util.List;
 
@@ -12,6 +12,6 @@ public record AdminUserResponse(
         String userImgUrl,
         Role role,
         Boolean isActive,
-        List<WalkResponse> = walks
+        List<WalkAdminResponse> walks
 ) {
 }
