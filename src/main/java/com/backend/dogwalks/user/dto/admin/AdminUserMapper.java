@@ -1,6 +1,10 @@
 package com.backend.dogwalks.user.dto.admin;
 
 import com.backend.dogwalks.user.entity.CustomUser;
+import com.backend.dogwalks.walk.dto.WalkAdminResponse;
+import com.backend.dogwalks.walk.dto.WalkMapper;
+
+import java.util.List;
 
 public class AdminUserMapper {
     public static CustomUser toEntity(AdminUserRequest adminUserRequest) {
@@ -14,7 +18,8 @@ public class AdminUserMapper {
     }
 
     public static AdminUserResponse toDto(CustomUser user) {
-        return new AdminUserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getUserImgUrl(), user.getRole(), user.getIsActive());
+        List<WalkAdminResponse> walks = user.getWalks().stream().map(walk -> WalkMapper.toDtoAdmin(walk)).toList();
+        return new AdminUserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getUserImgUrl(), user.getRole(), user.getIsActive(), walks);
     }
 
     public static void updateFromAdminRequest(CustomUser user, AdminUserRequest request) {
