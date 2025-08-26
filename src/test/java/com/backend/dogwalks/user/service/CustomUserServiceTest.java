@@ -42,7 +42,6 @@ public class CustomUserServiceTest {
     private CustomUserService customUserService;
 
     private CustomUser testUser;
-    private Walk testWalk;
     private static final Long USER_ID = 1L;
     private static final String USERNAME = "Maria";
     private static final String EMAIL = "maria@test.com";
