@@ -22,7 +22,7 @@ import java.util.Set;
 public class WalkService {
 
     private final WalkRepository walkRepository;
-    private static final Set<String> ALLOWED_SORT_FIELDS = Set.of("title", "location", "duration", "createdAt", "isActive");
+    private static final Set<String> ALLOWED_SORT_FIELDS = Set.of("id", "title", "location", "duration", "createdAt", "isActive");
 
     public WalkService(WalkRepository walkRepository) {
         this.walkRepository = walkRepository;

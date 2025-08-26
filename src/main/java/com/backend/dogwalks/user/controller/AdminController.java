@@ -27,7 +27,7 @@ public class AdminController {
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "ASC") String sortDir
     ) {
-        Page<AdminUserResponse> users =adminService.getAllUsersPaginated(page,size,sortBy,sortDir);
+        Page<AdminUserResponse> users = adminService.getAllUsersPaginated(page,size,sortBy,sortDir);
 
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
