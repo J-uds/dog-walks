@@ -12,6 +12,7 @@ public class WalkMapper {
                 request.duration(),
                 request.description(),
                 request.walkImgUrl(),
+                request.isActive(),
                 user
         );
     }
