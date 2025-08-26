@@ -25,6 +25,7 @@ public class WalkMapper {
                 walk.getLocation(),
                 walk.getDuration(),
                 walk.getDescription(),
+                walk.getWalkImgUrl(),
                 walk.getIsActive(),
                 walk.getUser().getUsername()
         );
@@ -38,15 +39,27 @@ public class WalkMapper {
         );
     }
 
-  /*  public static void updateFromWalkRequest(Walk walk, WalkRequest request, CustomUser user) {
+    public static void updateFromWalkRequest(Walk walk, WalkRequest request, CustomUser user) {
         if (request.title() != null) {
             walk.setTitle(request.title());
         }
-        if(request.location() != null) {
+        if (request.location() != null) {
             walk.setLocation(request.location());
         }
-        if(walk.getUser() != null) {
+        if (request.duration() != null) {
+            walk.setDuration(request.duration());
+        }
+        if (request.description() != null) {
+            walk.setDescription(request.description());
+        }
+        if (request.walkImgUrl() != null) {
+            walk.setWalkImgUrl(request.walkImgUrl());
+        }
+        if (request.isActive() != null) {
+            walk.setIsActive(request.isActive());
+        }
+        if (walk.getUser() != null) {
             walk.setUser(user);
         }
-    }*/
+    }
 }

@@ -15,13 +15,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.lang.IllegalStateException;
+import java.util.Set;
 
 @Service
 @Transactional
 public class AdminService {
 
     private final CustomUserRepository customUserRepository;
-
+    private static final Set<String> ALLOWED_SORT_FIELDS = Set.of("id", "username", "email", "isActive");
     public AdminService(CustomUserRepository customUserRepository) {
         this.customUserRepository = customUserRepository;
     }
@@ -29,9 +30,19 @@ public class AdminService {
     @Transactional(readOnly = true)
     public Page<AdminUserResponse> getAllUsersPaginated(int page, int size, String sortBy, String sortDirection) {
 
+        if (page < 0) throw new IllegalArgumentException("Page index must be 0 or greater");
+        if (size <= 0) throw new IllegalArgumentException("Page size must be greater than 0");
+
         int maxSize = 100;
-        if (size > maxSize) {
-            size = maxSize;
+        size = Math.min(size, maxSize);
+
+
+        if (!ALLOWED_SORT_FIELDS.contains(sortBy)) {
+            sortBy = "id";
+        }
+
+        if (!"ASC".equalsIgnoreCase(sortDirection) && !"DESC".equalsIgnoreCase(sortDirection)) {
+            sortDirection = "ASC";
         }
 
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);

@@ -3,6 +3,7 @@ package com.backend.dogwalks.user.controller;
 import com.backend.dogwalks.user.dto.admin.AdminUserRequest;
 import com.backend.dogwalks.user.dto.admin.AdminUserResponse;
 import com.backend.dogwalks.user.service.AdminService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class AdminController {
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "ASC") String sortDir
     ) {
-        Page<AdminUserResponse> users =adminService.getAllUsersPaginated(page,size,sortBy,sortDir);
+        Page<AdminUserResponse> users = adminService.getAllUsersPaginated(page,size,sortBy,sortDir);
 
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
@@ -42,7 +43,7 @@ public class AdminController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN)")
-    public ResponseEntity<AdminUserResponse> updateUser(@PathVariable Long id, @RequestBody AdminUserRequest request) {
+    public ResponseEntity<AdminUserResponse> updateUser(@PathVariable Long id, @Valid @RequestBody AdminUserRequest request) {
 
         AdminUserResponse updatedUser = adminService.updateUser(id, request);
 

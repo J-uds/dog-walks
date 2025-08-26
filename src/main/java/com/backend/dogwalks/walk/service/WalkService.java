@@ -1,6 +1,7 @@
 package com.backend.dogwalks.walk.service;
 
 import com.backend.dogwalks.exception.custom_exception.EntityNotFoundException;
+import com.backend.dogwalks.user.dto.admin.AdminUserMapper;
 import com.backend.dogwalks.user.entity.CustomUser;
 import com.backend.dogwalks.walk.dto.WalkMapper;
 import com.backend.dogwalks.walk.dto.WalkRequest;
@@ -21,7 +22,7 @@ import java.util.Set;
 public class WalkService {
 
     private final WalkRepository walkRepository;
-    private static final Set<String> ALLOWED_SORT_FIELDS = Set.of("title", "location", "duration", "createdAt", "isActive");
+    private static final Set<String> ALLOWED_SORT_FIELDS = Set.of("id", "title", "location", "duration", "createdAt", "isActive");
 
     public WalkService(WalkRepository walkRepository) {
         this.walkRepository = walkRepository;
@@ -66,16 +67,11 @@ public class WalkService {
         return WalkMapper.toDto(savedWalk);
     }
 
-    public WalkResponse updateWalk(Long id, WalkRequest request) {
+    public WalkResponse updateWalk(Long id, WalkRequest request, CustomUser user) {
 
         Walk walk = findById(id);
 
-        walk.setTitle(request.title());
-        walk.setLocation(request.location());
-        walk.setDuration(request.duration());
-        walk.setDescription(request.description());
-        walk.setWalkImgUrl(request.walkImgUrl());
-        walk.setIsActive(request.isActive());
+        WalkMapper.updateFromWalkRequest(walk, request, user);
 
         Walk updatedWalk = walkRepository.save(walk);
 
