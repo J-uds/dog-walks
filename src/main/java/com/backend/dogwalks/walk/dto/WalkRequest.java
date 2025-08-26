@@ -11,11 +11,13 @@ public record WalkRequest(
         @Size(min= 2, max = 100, message = "Title must contain between 2 and 100 characters")
         String title,
 
+        @NotBlank(message = "Location is needed")
         @Size(min= 2, max = 100, message = "Title must contain between 2 and 100 characters")
         String location,
         Integer duration,
         String description,
         String walkImgUrl,
+        @NotBlank(message = "Status is needed")
         Boolean isActive
 ) {
 }
