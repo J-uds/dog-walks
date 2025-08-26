@@ -14,11 +14,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
+
 @Service
 @Transactional
 public class WalkService {
 
     private final WalkRepository walkRepository;
+    private static final Set<String> ALLOWED_SORT_FIELDS = Set.of("title", "location", "duration", "createdAt", "isActive");
 
     public WalkService(WalkRepository walkRepository) {
         this.walkRepository = walkRepository;
@@ -27,8 +30,19 @@ public class WalkService {
     @Transactional(readOnly = true)
     public Page<WalkResponse> getAllWalksPaginated(int page, int size, String sortBy, String sortDirection) {
 
+        if (page < 0) throw new IllegalArgumentException("Page index must be 0 or greater");
+        if (size <= 0) throw new IllegalArgumentException("Page size must be greater than 0");
+
         int maxSize = 100;
         size = Math.min(size, maxSize);
+
+        if (!ALLOWED_SORT_FIELDS.contains(sortBy)) {
+            sortBy = "createdAt";
+        }
+
+        if (!"ASC".equalsIgnoreCase(sortDirection) && !"DESC".equalsIgnoreCase(sortDirection)) {
+            sortDirection = "ASC";
+        }
 
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
