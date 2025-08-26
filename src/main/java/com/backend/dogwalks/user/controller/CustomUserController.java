@@ -1,6 +1,6 @@
 package com.backend.dogwalks.user.controller;
 
-import com.backend.dogwalks.security.CustomUserDetails;
+import com.backend.dogwalks.security.user.CustomUserDetails;
 import com.backend.dogwalks.user.dto.user.CustomUserResponse;
 import com.backend.dogwalks.user.dto.user.CustomUserUpdateEmailRequest;
 import com.backend.dogwalks.user.dto.user.CustomUserUpdatePasswordRequest;

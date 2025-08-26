@@ -31,15 +31,39 @@ public class WalkMapper {
         );
     }
 
-    public static WalkAdminResponse toDtoAdmin(Walk walk) {
-        return new WalkAdminResponse(
+    public static WalkSummaryResponse toSummaryDto(Walk walk) {
+        return new WalkSummaryResponse(
+                walk.getId(),
+                walk.getTitle(),
+                walk.getLocation(),
+                walk.getDuration(),
+                walk.getWalkImgUrl(),
+                walk.getCreatedAt()
+        );
+    }
+
+    public static WalkDetailResponse toDetailDto(Walk walk) {
+        return new WalkDetailResponse(
+                walk.getId(),
+                walk.getTitle(),
+                walk.getLocation(),
+                walk.getDuration(),
+                walk.getDescription(),
+                walk.getWalkImgUrl(),
+                walk.getUser().getUsername(),
+                walk.getCreatedAt()
+        );
+    }
+
+    public static WalkAdminDtoResponse toDtoAdmin(Walk walk) {
+        return new WalkAdminDtoResponse(
                 walk.getId(),
                 walk.getTitle(),
                 walk.getLocation()
         );
     }
 
-    public static void updateFromWalkRequest(Walk walk, WalkRequest request, CustomUser user) {
+    public static void updateFromWalkRequest(Walk walk, WalkRequest request) {
         if (request.title() != null) {
             walk.setTitle(request.title());
         }
@@ -59,7 +83,7 @@ public class WalkMapper {
             walk.setIsActive(request.isActive());
         }
         if (walk.getUser() != null) {
-            walk.setUser(user);
+            walk.setUser(walk.getUser());
         }
     }
 }

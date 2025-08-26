@@ -10,8 +10,8 @@ import com.backend.dogwalks.exception.custom_exception.EntityAlreadyExistsExcept
 import com.backend.dogwalks.exception.custom_exception.EntityNotFoundException;
 import com.backend.dogwalks.exception.custom_exception.InvalidCredentialsException;
 import com.backend.dogwalks.exception.custom_exception.UserNotActiveException;
-import com.backend.dogwalks.security.CustomUserDetails;
-import com.backend.dogwalks.security.jwt.JwtUtil;
+import com.backend.dogwalks.security.user.CustomUserDetails;
+import com.backend.dogwalks.security.user.jwt.JwtUtil;
 import com.backend.dogwalks.user.entity.CustomUser;
 import com.backend.dogwalks.user.enums.Role;
 import com.backend.dogwalks.user.repository.CustomUserRepository;

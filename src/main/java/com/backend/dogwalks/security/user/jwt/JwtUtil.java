@@ -1,6 +1,6 @@
-package com.backend.dogwalks.security.jwt;
+package com.backend.dogwalks.security.user.jwt;
 
-import com.backend.dogwalks.security.CustomUserDetails;
+import com.backend.dogwalks.security.user.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;

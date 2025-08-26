@@ -1,6 +1,6 @@
-package com.backend.dogwalks.security.jwt;
+package com.backend.dogwalks.security.user.jwt;
 
-import com.backend.dogwalks.security.CustomUserDetailsService;
+import com.backend.dogwalks.security.user.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
