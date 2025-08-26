@@ -3,6 +3,8 @@ package com.backend.dogwalks.walk.entity;
 import com.backend.dogwalks.user.entity.CustomUser;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -47,12 +49,22 @@ public class Walk {
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private CustomUser user;
 
-    public Walk(String title, String location, Integer duration, String description, String walkImgUrl, CustomUser user) {
+    public Walk(String title, String location, Integer duration, String description, String walkImgUrl, Boolean isActive, CustomUser user) {
         this.title = title;
         this.location = location;
         this.duration = duration;
         this.description = description;
         this.walkImgUrl = walkImgUrl;
+        this.isActive = isActive;
         this.user = user;
+    }
+
+    public Walk(String title, String location, Integer duration, String description, String walkImgUrl, Boolean isActive) {
+        this.title = title;
+        this.location = location;
+        this.duration = duration;
+        this.description = description;
+        this.walkImgUrl = walkImgUrl;
+        this.isActive = isActive;
     }
 }

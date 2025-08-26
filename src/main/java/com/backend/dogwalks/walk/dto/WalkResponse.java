@@ -14,7 +14,6 @@ public record WalkResponse(
     Integer duration,
     String description,
     Boolean isActive,
-    String username,
-    String email
+    String username
 ) {
 }

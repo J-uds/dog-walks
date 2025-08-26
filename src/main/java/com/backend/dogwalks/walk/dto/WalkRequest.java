@@ -15,6 +15,7 @@ public record WalkRequest(
         String location,
         Integer duration,
         String description,
-        String walkImgUrl
+        String walkImgUrl,
+        Boolean isActive
 ) {
 }
