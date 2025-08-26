@@ -59,12 +59,12 @@ public class Walk {
         this.user = user;
     }
 
-    public Walk(String title, String location, Integer duration, String description, String walkImgUrl, Boolean isActive) {
+   /* public Walk(String title, String location, Integer duration, String description, String walkImgUrl, Boolean isActive) {
         this.title = title;
         this.location = location;
         this.duration = duration;
         this.description = description;
         this.walkImgUrl = walkImgUrl;
         this.isActive = isActive;
-    }
+    }*/
 }

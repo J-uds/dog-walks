@@ -13,6 +13,7 @@ public record WalkResponse(
     String location,
     Integer duration,
     String description,
+    String walkImgUrl,
     Boolean isActive,
     String username
 ) {

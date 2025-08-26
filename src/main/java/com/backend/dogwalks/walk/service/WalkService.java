@@ -1,6 +1,7 @@
 package com.backend.dogwalks.walk.service;
 
 import com.backend.dogwalks.exception.custom_exception.EntityNotFoundException;
+import com.backend.dogwalks.user.dto.admin.AdminUserMapper;
 import com.backend.dogwalks.user.entity.CustomUser;
 import com.backend.dogwalks.walk.dto.WalkMapper;
 import com.backend.dogwalks.walk.dto.WalkRequest;
@@ -66,16 +67,11 @@ public class WalkService {
         return WalkMapper.toDto(savedWalk);
     }
 
-    public WalkResponse updateWalk(Long id, WalkRequest request) {
+    public WalkResponse updateWalk(Long id, WalkRequest request, CustomUser user) {
 
         Walk walk = findById(id);
 
-        walk.setTitle(request.title());
-        walk.setLocation(request.location());
-        walk.setDuration(request.duration());
-        walk.setDescription(request.description());
-        walk.setWalkImgUrl(request.walkImgUrl());
-        walk.setIsActive(request.isActive());
+        WalkMapper.updateFromWalkRequest(walk, request, user);
 
         Walk updatedWalk = walkRepository.save(walk);
 
