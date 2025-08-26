@@ -3,9 +3,7 @@ package com.backend.dogwalks.walk.service;
 import com.backend.dogwalks.exception.custom_exception.EntityNotFoundException;
 import com.backend.dogwalks.user.dto.admin.AdminUserMapper;
 import com.backend.dogwalks.user.entity.CustomUser;
-import com.backend.dogwalks.walk.dto.WalkMapper;
-import com.backend.dogwalks.walk.dto.WalkRequest;
-import com.backend.dogwalks.walk.dto.WalkResponse;
+import com.backend.dogwalks.walk.dto.*;
 import com.backend.dogwalks.walk.entity.Walk;
 import com.backend.dogwalks.walk.repository.WalkRepository;
 import org.springframework.data.domain.Page;
@@ -15,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.AccessDeniedException;
 import java.util.Set;
 
 @Service
@@ -26,6 +25,29 @@ public class WalkService {
 
     public WalkService(WalkRepository walkRepository) {
         this.walkRepository = walkRepository;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<WalkSummaryResponse> getAllWalksSummary(int page, int size, String sortBy, String sortDirection) {
+
+        if (page < 0) throw new IllegalArgumentException("Page index must be 0 or greater");
+        if (size <= 0) throw new IllegalArgumentException("Page size must be greater than 0");
+
+        int maxSize = 100;
+        size = Math.min(size, maxSize);
+
+        if (!ALLOWED_SORT_FIELDS.contains(sortBy)) {
+            sortBy = "createdAt";
+        }
+
+        if (!"ASC".equalsIgnoreCase(sortDirection) && !"DESC".equalsIgnoreCase(sortDirection)) {
+            sortDirection = "ASC";
+        }
+
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return walkRepository.findByIsActiveTrue(pageable).map(walk -> WalkMapper.toSummaryDto(walk));
     }
 
     @Transactional(readOnly = true)
@@ -52,6 +74,14 @@ public class WalkService {
     }
 
     @Transactional(readOnly = true)
+    public WalkDetailResponse getWalkDetailById(Long id) {
+
+        Walk walk = walkRepository.findByIdAndIsActiveTrue(id).orElseThrow(() -> new EntityNotFoundException("Walk not found or inactive"));
+
+        return WalkMapper.toDetailDto(walk);
+    }
+
+    @Transactional(readOnly = true)
     public WalkResponse getWalkById(Long id) {
 
         Walk walk = findById(id);
@@ -67,11 +97,11 @@ public class WalkService {
         return WalkMapper.toDto(savedWalk);
     }
 
-    public WalkResponse updateWalk(Long id, WalkRequest request, CustomUser user) {
+    public WalkResponse updateWalk(Long id, WalkRequest request) {
 
         Walk walk = findById(id);
 
-        WalkMapper.updateFromWalkRequest(walk, request, user);
+        WalkMapper.updateFromWalkRequest(walk, request);
 
         Walk updatedWalk = walkRepository.save(walk);
 

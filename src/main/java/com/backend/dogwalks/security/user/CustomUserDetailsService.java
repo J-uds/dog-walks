@@ -1,4 +1,4 @@
-package com.backend.dogwalks.security;
+package com.backend.dogwalks.security.user;
 
 import com.backend.dogwalks.exception.custom_exception.UsernameNotFoundException;
 import com.backend.dogwalks.user.repository.CustomUserRepository;

@@ -1,6 +1,6 @@
 package com.backend.dogwalks.config.security;
 
-import com.backend.dogwalks.security.jwt.JwtAuthFilter;
+import com.backend.dogwalks.security.user.jwt.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

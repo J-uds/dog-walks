@@ -1,4 +1,4 @@
-package com.backend.dogwalks.security;
+package com.backend.dogwalks.security.user;
 
 import com.backend.dogwalks.user.entity.CustomUser;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+
 
 public class CustomUserDetails implements UserDetails {
     private final CustomUser user;
@@ -33,5 +34,9 @@ public class CustomUserDetails implements UserDetails {
 
     public Long getId() {
         return user.getId();
+    }
+
+    public CustomUser getUser() {
+        return user;
     }
 }

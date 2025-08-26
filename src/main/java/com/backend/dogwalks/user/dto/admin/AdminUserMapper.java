@@ -1,7 +1,7 @@
 package com.backend.dogwalks.user.dto.admin;
 
 import com.backend.dogwalks.user.entity.CustomUser;
-import com.backend.dogwalks.walk.dto.WalkAdminResponse;
+import com.backend.dogwalks.walk.dto.WalkAdminDtoResponse;
 import com.backend.dogwalks.walk.dto.WalkMapper;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class AdminUserMapper {
     }
 
     public static AdminUserResponse toDto(CustomUser user) {
-        List<WalkAdminResponse> walks = user.getWalks().stream().map(walk -> WalkMapper.toDtoAdmin(walk)).toList();
+        List<WalkAdminDtoResponse> walks = user.getWalks().stream().map(walk -> WalkMapper.toDtoAdmin(walk)).toList();
         return new AdminUserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getUserImgUrl(), user.getRole(), user.getIsActive(), walks);
     }
 
