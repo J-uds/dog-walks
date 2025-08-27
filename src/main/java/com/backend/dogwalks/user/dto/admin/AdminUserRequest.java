@@ -2,6 +2,7 @@ package com.backend.dogwalks.user.dto.admin;
 
 import com.backend.dogwalks.user.enums.Role;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record AdminUserRequest(
@@ -13,6 +14,7 @@ public record AdminUserRequest(
         String email,
         String userImgUrl,
         Role role,
+        @NotNull(message = "Status is needed")
         Boolean isActive
 ) {
 }

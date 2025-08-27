@@ -10,7 +10,6 @@ import com.backend.dogwalks.user.dto.user.CustomUserUpdateRequest;
 import com.backend.dogwalks.user.entity.CustomUser;
 import com.backend.dogwalks.user.enums.Role;
 import com.backend.dogwalks.user.repository.CustomUserRepository;
-import com.backend.dogwalks.walk.entity.Walk;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -21,7 +20,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 

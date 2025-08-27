@@ -7,8 +7,8 @@ public class RegisterMapper {
         return new CustomUser(
               registerRequest.username(),
               registerRequest.email(),
-              registerRequest.password(),
-              registerRequest.userImgUrl()
+              registerRequest.password()
+              /*registerRequest.userImgUrl()*/
         );
     }
 

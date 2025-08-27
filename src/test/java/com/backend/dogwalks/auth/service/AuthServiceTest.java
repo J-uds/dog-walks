@@ -58,7 +58,7 @@ public class AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-        registerRequest = new RegisterRequest("Maria", "maria@test.com", "Maria123456.", "img.png");
+        registerRequest = new RegisterRequest("Maria", "maria@test.com", "Maria123456."/*"img.png"*/);
         loginRequest = new LoginRequest("maria@test.com", "Maria123456.");
         mockUser = new CustomUser();
         mockUser.setId(1L);
@@ -86,7 +86,7 @@ public class AuthServiceTest {
        assertEquals(1L, response.id());
        assertEquals("Maria", response.username());
        assertEquals("maria@test.com", response.email());
-       assertEquals("img.png", response.userImgUrl());
+       /*assertEquals("img.png", response.userImgUrl());*/
        assertEquals(Role.USER, response.role());
        assertEquals(Boolean.TRUE, response.isActive());
 
@@ -98,7 +98,7 @@ public class AuthServiceTest {
                user.getUsername().equals("Maria") &&
                user.getEmail().equals("maria@test.com") &&
                user.getPassword().equals("encodedPassword") &&
-               user.getUserImgUrl().equals("img.png") &&
+               /*user.getUserImgUrl().equals("img.png") &&*/
                user.getRole().equals(Role.USER) &&
                Boolean.TRUE.equals(user.getIsActive())));
    }
