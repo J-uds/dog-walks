@@ -1,5 +1,7 @@
 package com.backend.dogwalks.auth.controller;
 
+import com.backend.dogwalks.auth.dto.login.LoginRequest;
+import com.backend.dogwalks.auth.dto.login.LoginResponse;
 import com.backend.dogwalks.auth.dto.register.RegisterRequest;
 import com.backend.dogwalks.auth.dto.register.RegisterResponse;
 import com.backend.dogwalks.user.entity.CustomUser;
@@ -66,7 +68,7 @@ public class AuthControllerProtectedIntTest {
 
     @Test
     @DisplayName("Successful register")
-    void successfulRegister() {
+    public void successfulRegister() {
 
         RegisterRequest registerRequest = new RegisterRequest(USERNAME,EMAIL,PASSWORD);
 
@@ -84,5 +86,25 @@ public class AuthControllerProtectedIntTest {
         assertEquals(USERNAME, savedUser.getUsername());
         assertEquals(Role.USER, savedUser.getRole());
         assertTrue(savedUser.getIsActive());
+    }
+
+    @Test
+    @DisplayName(("Successful login, 200 OK and JWT token"))
+    public void successfulLogin() {
+
+        RegisterRequest registerRequest = new RegisterRequest(USERNAME, EMAIL, PASSWORD);
+
+        restTemplate.postForEntity(baseUrl + "/register", registerRequest, RegisterResponse.class);
+
+        LoginRequest loginRequest = new LoginRequest(EMAIL, PASSWORD);
+        ResponseEntity<LoginResponse> loginResponse = restTemplate.postForEntity(baseUrl + "/login", loginRequest, LoginResponse.class);
+
+        assertEquals(HttpStatus.OK, loginResponse.getStatusCode());
+        assertNotNull(loginResponse.getBody());
+        assertEquals(EMAIL, loginResponse.getBody().email());
+        assertEquals(USERNAME, loginResponse.getBody().username());
+        assertEquals("Bearer", loginResponse.getBody().tokenType());
+        assertNotNull(loginResponse.getBody().token());
+        assertTrue(loginResponse.getBody().token().split("\\.").length == 3);
     }
 }
