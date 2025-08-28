@@ -5,19 +5,24 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+
 @Component
 public class JwtUtil {
 
+    //para poder usarlos en test
+    @Setter
     //inyecta valores desde application.properties
     @Value("${app.jwt.secret}")
     private String jwtSecretKey;
 
+    @Setter
     @Value("${app.jwt.expiration}")
     private Long jwtExpiration;
 
