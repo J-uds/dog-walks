@@ -1,7 +1,6 @@
-package com.backend.dogwalks.security;
+package com.backend.dogwalks.security.user.jwt;
 
 import com.backend.dogwalks.security.user.CustomUserDetails;
-import com.backend.dogwalks.security.user.jwt.JwtUtil;
 import com.backend.dogwalks.user.entity.CustomUser;
 import com.backend.dogwalks.user.enums.Role;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,9 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.testcontainers.shaded.org.checkerframework.checker.units.qual.C;
-
-import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
