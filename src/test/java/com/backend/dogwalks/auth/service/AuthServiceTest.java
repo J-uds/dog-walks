@@ -13,6 +13,7 @@ import com.backend.dogwalks.security.user.jwt.JwtUtil;
 import com.backend.dogwalks.user.entity.CustomUser;
 import com.backend.dogwalks.user.enums.Role;
 import com.backend.dogwalks.user.repository.CustomUserRepository;
+import com.backend.dogwalks.user.service.CustomUserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,6 +39,9 @@ public class AuthServiceTest {
 
     @Mock
     private CustomUserRepository customUserRepository;
+
+    @Mock
+    private CustomUserService customUserService;
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -73,7 +77,7 @@ public class AuthServiceTest {
     }
 
    @Test
-   @DisplayName("Should successfully register user when e-mail doesn't exist")
+   @DisplayName("Register Should successfully register user when e-mail doesn't exist")
     void registerUser_shouldSaveUser_whenEmailNotExist() {
 
        when(customUserRepository.existsByEmail(registerRequest.email())).thenReturn(false);
@@ -104,7 +108,7 @@ public class AuthServiceTest {
    }
 
    @Test
-   @DisplayName("Should throw EntityAlreadyExistException when e-mail already exist")
+   @DisplayName("Register Should throw EntityAlreadyExistException when e-mail already exist")
     void registerUser_shouldThrowException_whenEmailAlreadyExist() {
 
        when(customUserRepository.existsByEmail(registerRequest.email())).thenReturn(true);
@@ -119,14 +123,14 @@ public class AuthServiceTest {
    }
 
    @Test
-   @DisplayName("Should return valid token when credentials are correct")
+   @DisplayName("Login Should return valid token when credentials are correct")
     void loginUser_shouldReturnToken_whenValidCredentials() {
 
        Authentication authentication = new UsernamePasswordAuthenticationToken(mockUserDetails, null);
 
        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
        when(jwtUtil.generateToken(mockUserDetails)).thenReturn("test-jwt-token");
-       when(customUserRepository.findUserByEmail(loginRequest.email())).thenReturn(Optional.of(mockUser));
+       when(customUserService.findUserByEmail(loginRequest.email())).thenReturn(mockUser);
 
        LoginResponse response = authService.loginUser(loginRequest);
 
@@ -141,11 +145,11 @@ public class AuthServiceTest {
 
        verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
        verify(jwtUtil, times(1)).generateToken(mockUserDetails);
-       verify(customUserRepository, times(1)).findUserByEmail(loginRequest.email());
+       verify(customUserService, times(1)).findUserByEmail(loginRequest.email());
    }
 
    @Test
-   @DisplayName("Should throw InvalidCredentialsException when credentials are wrong")
+   @DisplayName("Login Should throw InvalidCredentialsException when credentials are wrong")
     void loginUser_shouldThrowException_whenInvalidCredentials() {
 
        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenThrow(new BadCredentialsException("Bad credentials"));
@@ -160,25 +164,25 @@ public class AuthServiceTest {
    }
 
    @Test
-   @DisplayName("Should throw EntityNotFoundException when authenticated user not found in database")
+   @DisplayName("Login Should throw EntityNotFoundException when authenticated user not found in database")
     void loginUser_shouldThrowException_whenUserNotFoundAfterAuthentication() {
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(mockUserDetails, null);
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
-        when(customUserRepository.findUserByEmail(loginRequest.email())).thenReturn(Optional.empty());
+        when(customUserService.findUserByEmail(loginRequest.email())).thenThrow(new EntityNotFoundException("User with e-mail: maria@test.com, not found in data base"));
 
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> authService.loginUser(loginRequest));
 
-        assertEquals("Authenticated user with e-mail: " + loginRequest.email() + ", not found in data base", exception.getMessage());
+        assertEquals("User with e-mail: " + loginRequest.email() + ", not found in data base", exception.getMessage());
 
         verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(customUserRepository, times(1)).findUserByEmail(eq(loginRequest.email()));
+        verify(customUserService, times(1)).findUserByEmail(eq(loginRequest.email()));
         verifyNoInteractions(jwtUtil);
    }
 
    @Test
-   @DisplayName("Should throw UserNotActiveException when user is deactivated")
+   @DisplayName("Login Should throw UserNotActiveException when user is deactivated")
    void loginUser_shouldThrowException_whenUserIsNotActive() {
 
        Authentication authentication = new UsernamePasswordAuthenticationToken(mockUserDetails, null);
@@ -187,43 +191,43 @@ public class AuthServiceTest {
        inactiveUser.setIsActive(false);
 
        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
-       when(customUserRepository.findUserByEmail(loginRequest.email())).thenReturn(Optional.of(inactiveUser));
+       when(customUserService.findUserByEmail(loginRequest.email())).thenReturn(inactiveUser);
 
        UserNotActiveException exception = assertThrows(UserNotActiveException.class, () -> authService.loginUser(loginRequest));
 
        assertEquals("User account is deactivated", exception.getMessage());
 
        verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
-       verify(customUserRepository, times(1)).findUserByEmail(eq(loginRequest.email()));
+       verify(customUserService, times(1)).findUserByEmail(eq(loginRequest.email()));
        verifyNoInteractions(jwtUtil);
    }
 
    @Test
-   @DisplayName("Should handle JWT generation failure")
+   @DisplayName("Login Should handle JWT generation failure")
     void loginUser_shouldThrowException_whenJwtGenerationFails() {
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(mockUserDetails, null);
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
-        when(customUserRepository.findUserByEmail(loginRequest.email())).thenReturn(Optional.of(mockUser));
+        when(customUserService.findUserByEmail(loginRequest.email())).thenReturn(mockUser);
         when(jwtUtil.generateToken(mockUserDetails)).thenThrow(new RuntimeException("JWT generation failed"));
 
         assertThrows(RuntimeException.class, () -> authService.loginUser(loginRequest));
 
         verify(authenticationManager, times(1)).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(customUserRepository, times(1)).findUserByEmail(eq(loginRequest.email()));
+        verify(customUserService, times(1)).findUserByEmail(eq(loginRequest.email()));
         verify(jwtUtil, times(1)).generateToken(mockUserDetails);
     }
 
    @Test
-   @DisplayName("Should create authentication token with correct credentials")
+   @DisplayName("Login Should create authentication token with correct credentials")
     void loginUser_shouldCreateAuthenticationTokenWithCorrectCredentials() {
 
        Authentication authentication = new UsernamePasswordAuthenticationToken(mockUserDetails, null);
 
        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
        when(jwtUtil.generateToken(mockUserDetails)).thenReturn("test-jwt-token");
-       when(customUserRepository.findUserByEmail(loginRequest.email())).thenReturn(Optional.of(mockUser));
+       when(customUserService.findUserByEmail(loginRequest.email())).thenReturn(mockUser);
 
        authService.loginUser(loginRequest);
 
