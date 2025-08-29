@@ -15,6 +15,7 @@ import com.backend.dogwalks.security.user.jwt.JwtUtil;
 import com.backend.dogwalks.user.entity.CustomUser;
 import com.backend.dogwalks.user.enums.Role;
 import com.backend.dogwalks.user.repository.CustomUserRepository;
+import com.backend.dogwalks.user.service.CustomUserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,12 +27,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthService {
     private final CustomUserRepository customUserRepository;
+    private final CustomUserService customUserService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
-    public AuthService(CustomUserRepository customUserRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+    public AuthService(CustomUserRepository customUserRepository, CustomUserService customUserService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
         this.customUserRepository = customUserRepository;
+        this.customUserService = customUserService;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
@@ -57,7 +60,7 @@ public class AuthService {
 
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-            CustomUser user = customUserRepository.findUserByEmail(userDetails.getUsername()).orElseThrow(() -> new EntityNotFoundException("Authenticated user with e-mail: " + userDetails.getUsername() + ", not found in data base. Authentication should not allow to reach this point"));
+            CustomUser user = customUserService.findUserByEmail(userDetails.getUsername());
 
             if (!user.getIsActive()) {
                 throw new UserNotActiveException("User account is deactivated");

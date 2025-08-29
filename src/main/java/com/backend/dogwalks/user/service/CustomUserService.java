@@ -74,6 +74,11 @@ public class CustomUserService {
         customUserRepository.save(user);
     }
 
+    public CustomUser findUserByEmail(String email) {
+
+        return customUserRepository.findUserByEmail(email).orElseThrow(() -> new EntityNotFoundException("User with e-mail: " + email + ", not found in data base"));
+    }
+
     private void validateEmailChange(CustomUserUpdateEmailRequest request, CustomUser user) {
 
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
