@@ -6,12 +6,12 @@ import com.backend.dogwalks.user.entity.CustomUser;
 import com.backend.dogwalks.user.enums.Role;
 import com.backend.dogwalks.user.repository.CustomUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
+import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
-import org.testcontainers.shaded.org.checkerframework.checker.units.qual.C;
 
-@Component
+@TestConfiguration
 public class IntegrationTestUtils {
 
     @Autowired
@@ -26,7 +26,7 @@ public class IntegrationTestUtils {
     @Autowired
     ObjectMapper objectMapper;
 
-    public String toJson(Object obj) throws Exception {
+    public String toJson(Object obj) throws JsonProcessingException {
         return objectMapper.writeValueAsString(obj);
     }
 
@@ -37,8 +37,9 @@ public class IntegrationTestUtils {
     public CustomUser createUser(String email, String rawPassword, Role role) {
         CustomUser user = new CustomUser();
         user.setEmail(email);
-        user.setPassword(rawPassword);
+        user.setPassword(passwordEncoder.encode(rawPassword));
         user.setRole(role);
+        user.setIsActive(true);
 
         return customUserRepository.save(user);
     }

@@ -34,7 +34,8 @@ public class AuthControllerIntegrationTest {
     static MySQLContainer<?> mySqlContainer = new MySQLContainer<>("mysql:8.0")
             .withDatabaseName("dogwalks-test")
             .withUsername("test_user")
-            .withPassword("test_password");
+            .withPassword("test_password")
+            .withReuse(false); //por defecto es así
 
     @DynamicPropertySource
     static void setDatasourceProperties(DynamicPropertyRegistry registry) {
