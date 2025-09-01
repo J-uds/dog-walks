@@ -10,6 +10,7 @@ import com.backend.dogwalks.user.enums.Role;
 import com.backend.dogwalks.user.repository.CustomUserRepository;
 import com.backend.dogwalks.utils.IntegrationTestUtils;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -90,6 +91,7 @@ public class CustomUserControllerIntegrationTest {
     }
 
     @Test
+    @DisplayName("GET /api/users/profile - must return user when authenticated")
     void getMyProfile_shouldReturnsUser_whenAuthenticated () throws Exception {
 
         mockMvc.perform(get("/api/users/profile")
@@ -100,6 +102,7 @@ public class CustomUserControllerIntegrationTest {
     }
 
     @Test
+    @DisplayName("GET /api/users/profile - must return 401 unauthorized when no token")
     void getMyProfile_shouldReturnUnauthorized_WhenNoToken() throws Exception {
 
         mockMvc.perform(get("/api/users/profile")
@@ -108,6 +111,7 @@ public class CustomUserControllerIntegrationTest {
     }
 
     @Test
+    @DisplayName("PUT /api/users/profile - must update username when request is valid")
     void updateMyProfile_shouldUpdateUser_whenValidRequest() throws Exception {
 
         CustomUserUpdateRequest request = new CustomUserUpdateRequest("Pepa", null);
@@ -125,6 +129,7 @@ public class CustomUserControllerIntegrationTest {
     }
 
     @Test
+    @DisplayName("PUT /api/users/profile/email - must update email when request is valid")
     void updateMyEmail_shouldUpdateEmail_whenValidRequest() throws Exception {
 
         CustomUserUpdateEmailRequest request = new CustomUserUpdateEmailRequest("new@test.com", "Testpassword547.");
@@ -141,6 +146,7 @@ public class CustomUserControllerIntegrationTest {
     }
 
     @Test
+    @DisplayName("PUT /api/users/profile/password - must update password when request is valid")
     void updateMyPassword_shouldUpdatePassword_whenValidRequest() throws Exception {
 
         CustomUserUpdatePasswordRequest request = new CustomUserUpdatePasswordRequest( "Testpassword547.", "NewPassword874.", "NewPassword874.");
@@ -156,6 +162,7 @@ public class CustomUserControllerIntegrationTest {
     }
 
     @Test
+    @DisplayName("DELETE /api/users/profile/password - must deactivate user when authenticated")
     void deactivateMyProfile_shouldDeactivateUser_whenUserIsAuthenticated() throws Exception {
 
         mockMvc.perform(delete("/api/users/profile/deactivate")
