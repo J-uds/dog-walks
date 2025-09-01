@@ -91,7 +91,7 @@ public class AdminControllerIntegrationTest {
     }
 
     @Nested
-    @DisplayName("GET Users")
+    @DisplayName("Get Users")
     class GetUsers {
 
         @Test
@@ -159,7 +159,7 @@ public class AdminControllerIntegrationTest {
         @DisplayName("GET /api/admin/users/{id} - must return user when valid id")
         void getUserById_shouldReturnUser_whenValidId() throws Exception{
 
-            mockMvc.perform(get("/api/admin/users({id}", user.getId())
+            mockMvc.perform(get("/api/admin/users/{id}", user.getId())
                             .header("Authorization", "Bearer " + adminToken)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
@@ -174,7 +174,7 @@ public class AdminControllerIntegrationTest {
         @DisplayName("GET /api/admin/users/{id} - must return not found when invalid id")
         void getUserById_shouldReturnNotFound_whenInvalidId() throws Exception{
 
-            mockMvc.perform(get("/api/admin/users({id}", 99L)
+            mockMvc.perform(get("/api/admin/users/{id}", 99L)
                             .header("Authorization", "Bearer " + adminToken)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNotFound());
@@ -187,7 +187,7 @@ public class AdminControllerIntegrationTest {
             mockMvc.perform(get("/api/admin/users")
                             .header("Authorization", "Bearer " + userToken)
                             .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isUnauthorized());
+                    .andExpect(status().isForbidden());
         }
 
         @Test
@@ -216,7 +216,7 @@ public class AdminControllerIntegrationTest {
                     true
             );
 
-            mockMvc.perform(put("/api/admin/users({id}", user.getId())
+            mockMvc.perform(put("/api/admin/users/{id}", user.getId())
                             .header("Authorization", "Bearer " + adminToken)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(integrationTestUtils.toJson(request)))
@@ -243,7 +243,7 @@ public class AdminControllerIntegrationTest {
                     true
             );
 
-            mockMvc.perform(put("/api/admin/users({id}", user.getId())
+            mockMvc.perform(put("/api/admin/users/{id}", user.getId())
                             .header("Authorization", "Bearer " + adminToken)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(integrationTestUtils.toJson(request)))
@@ -259,12 +259,12 @@ public class AdminControllerIntegrationTest {
         @DisplayName("DELETE /api/admin/users/{id} - must delete user when valid request")
         void deleteUser_shouldUpdateUser_whenValidRequest() throws Exception{
 
-            mockMvc.perform(delete("/api/admin/users({id}", user.getId())
+            mockMvc.perform(delete("/api/admin/users/{id}", user.getId())
                             .header("Authorization", "Bearer " + adminToken)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNoContent());
 
-            mockMvc.perform(delete("/api/admin/users({id}", user.getId())
+            mockMvc.perform(delete("/api/admin/users/{id}", user.getId())
                             .header("Authorization", "Bearer " + adminToken)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNotFound());
@@ -274,7 +274,7 @@ public class AdminControllerIntegrationTest {
         @DisplayName("DELETE /api/admin/users/{id} - must return 404 not found when invalid id")
         void deleteUser_shouldReturnNotFound_whenInvalidId() throws Exception{
 
-            mockMvc.perform(delete("/api/admin/users({id}", 99L)
+            mockMvc.perform(delete("/api/admin/users/{id}", 99L)
                             .header("Authorization", "Bearer " + adminToken)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNotFound());

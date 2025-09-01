@@ -42,7 +42,7 @@ public class AdminController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN)")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AdminUserResponse> updateUser(@PathVariable Long id, @Valid @RequestBody AdminUserRequest request) {
 
         AdminUserResponse updatedUser = adminService.updateUser(id, request);
@@ -51,7 +51,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN)")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
 
         adminService.deleteUser(id);
