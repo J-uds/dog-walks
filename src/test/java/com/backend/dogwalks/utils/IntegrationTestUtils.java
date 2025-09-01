@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @TestConfiguration
 public class IntegrationTestUtils {
@@ -24,9 +24,9 @@ public class IntegrationTestUtils {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
 
-    public String toJson(Object obj) throws JsonProcessingException {
+    public String toJson(Object obj) throws Exception {
         return objectMapper.writeValueAsString(obj);
     }
 
@@ -34,8 +34,9 @@ public class IntegrationTestUtils {
         return objectMapper.readValue(json, clazz);
     }
 
-    public CustomUser createUser(String email, String rawPassword, Role role) {
+    public CustomUser createUser(String username, String email, String rawPassword, Role role) {
         CustomUser user = new CustomUser();
+        user.setUsername(username);
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(rawPassword));
         user.setRole(role);
