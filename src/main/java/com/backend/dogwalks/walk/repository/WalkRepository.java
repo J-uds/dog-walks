@@ -1,5 +1,6 @@
 package com.backend.dogwalks.walk.repository;
 
+import com.backend.dogwalks.user.entity.CustomUser;
 import com.backend.dogwalks.walk.entity.Walk;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,4 +14,5 @@ import java.util.Optional;
 public interface WalkRepository extends JpaRepository <Walk, Long> {
     Page<Walk> findByIsActiveTrue(Pageable pageable);
     Optional<Walk> findByIdAndIsActiveTrue(Long id);
+    Page<Walk> findByUser(CustomUser user, Pageable pageable);
 }

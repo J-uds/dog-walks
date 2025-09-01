@@ -34,7 +34,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("AuthService Unit Tests")
+@DisplayName("Auth Service Unit Tests")
 public class AuthServiceTest {
 
     @Mock

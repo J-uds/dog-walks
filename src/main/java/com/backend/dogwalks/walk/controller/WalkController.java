@@ -13,10 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/walks")
+@RequestMapping("/api/walks")
 public class WalkController {
 
     private final WalkService walkService;
@@ -26,7 +27,7 @@ public class WalkController {
     }
 
     @GetMapping("/public")
-    public ResponseEntity<Page<WalkSummaryResponse>> getAllWalkSummaryPaginated(
+    public ResponseEntity<Page<WalkSummaryResponse>> getAllWalksSummaryPaginated(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
@@ -38,14 +39,13 @@ public class WalkController {
     }
 
     @GetMapping
-    @PreAuthorize("@walkSecurity.canAccessWalk(#id, authentication.principal)")
     public ResponseEntity<Page<WalkResponse>> getAllWalkPaginated(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
-            @RequestParam(defaultValue = "ASC") String sortDir
-    ) {
-        Page<WalkResponse> walks = walkService.getAllWalksPaginated(page, size, sortBy, sortDir);
+            @RequestParam(defaultValue = "ASC") String sortDir,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Page<WalkResponse> walks = walkService.getAllWalksPaginated(userDetails.getUser(), page, size, sortBy, sortDir);
 
         return new ResponseEntity<>(walks, HttpStatus.OK);
     }
