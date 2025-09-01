@@ -82,7 +82,7 @@ public class CustomUserControllerIntegrationTest {
         user = integrationTestUtils.createUser(
                 "Maria",
                 "maria@test.com",
-                "Testpassword547,",
+                "Testpassword547.",
                 Role.USER
         );
 
@@ -127,7 +127,7 @@ public class CustomUserControllerIntegrationTest {
     @Test
     void updateMyEmail_shouldUpdateEmail_whenValidRequest() throws Exception {
 
-        CustomUserUpdateEmailRequest request = new CustomUserUpdateEmailRequest("new@test.com", "Testpassword547,");
+        CustomUserUpdateEmailRequest request = new CustomUserUpdateEmailRequest("new@test.com", "Testpassword547.");
 
         mockMvc.perform(put("/api/users/profile/email")
                         .header("Authorization", "Bearer " + authToken)
@@ -143,7 +143,7 @@ public class CustomUserControllerIntegrationTest {
     @Test
     void updateMyPassword_shouldUpdatePassword_whenValidRequest() throws Exception {
 
-        CustomUserUpdatePasswordRequest request = new CustomUserUpdatePasswordRequest( "Testpassword547,", "NewPassword874,", "NewPassword874,");
+        CustomUserUpdatePasswordRequest request = new CustomUserUpdatePasswordRequest( "Testpassword547.", "NewPassword874.", "NewPassword874.");
 
         mockMvc.perform(put("/api/users/profile/password")
                         .header("Authorization", "Bearer " + authToken)
@@ -152,7 +152,7 @@ public class CustomUserControllerIntegrationTest {
                 .andExpect(status().isOk());
 
         CustomUser updatedUser = userRepository.findById(user.getId()).get();
-        assertTrue(passwordEncoder.matches("NewPassword874,", updatedUser.getPassword()));
+        assertTrue(passwordEncoder.matches("NewPassword874.", updatedUser.getPassword()));
     }
 
     @Test
