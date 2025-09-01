@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName(("CustomUserService Unit Tests"))
+@DisplayName(("CustomUser Service Unit Tests"))
 public class CustomUserServiceTest {
 
     @Mock
