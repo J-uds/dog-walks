@@ -8,7 +8,7 @@ import com.backend.dogwalks.user.repository.CustomUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @TestConfiguration
@@ -26,7 +26,7 @@ public class IntegrationTestUtils {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public String toJson(Object obj) throws Exception {
+    public String toJson(Object obj) throws JsonProcessingException {
         return objectMapper.writeValueAsString(obj);
     }
 
