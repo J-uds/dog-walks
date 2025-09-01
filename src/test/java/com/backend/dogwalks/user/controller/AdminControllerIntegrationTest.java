@@ -90,7 +90,7 @@ public class AdminControllerIntegrationTest {
 
     @Test
     @DisplayName("GET /api/admin/users - must return paginated users when valid request")
-    void getAllUsersPaginated_shouldReturnPaginatedUsers_whenValidRequest() {
+    void getAllUsersPaginated_shouldReturnPaginatedUsers_whenValidRequest() throws Exception{
 
         mockMvc.perform(get("/api/admin/users")
                 .header("Authorization", "Bearer " + adminToken)
@@ -108,7 +108,7 @@ public class AdminControllerIntegrationTest {
 
     @Test
     @DisplayName("GET /api/admin/users - must return 400 bad request when size is zero or negative")
-    void getAllUsersPaginated_shouldReturnPaginatedUsers_whenValidRequest() {
+    void getAllUsersPaginated_shouldReturnBadRequest_whenRequestSizeIsZero() throws Exception{
 
         mockMvc.perform(get("/api/admin/users")
                         .header("Authorization", "Bearer " + adminToken)
