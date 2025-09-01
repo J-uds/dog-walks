@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
 @ActiveProfiles("test")
+@DisplayName("Auth Controller Integration Tests")
 public class AuthControllerIntegrationTest {
 
     @Container

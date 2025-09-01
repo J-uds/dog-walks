@@ -2,6 +2,7 @@ package com.backend.dogwalks.walk;
 
 import com.backend.dogwalks.exception.custom_exception.EntityNotFoundException;
 import com.backend.dogwalks.user.entity.CustomUser;
+import com.backend.dogwalks.user.enums.Role;
 import com.backend.dogwalks.walk.dto.WalkDetailResponse;
 import com.backend.dogwalks.walk.dto.WalkRequest;
 import com.backend.dogwalks.walk.dto.WalkResponse;
@@ -77,14 +78,37 @@ public class WalkServiceTest {
         }
 
         @Test
-        @DisplayName("GetAllWalksPaginated should return a page of walks when request is valid")
-        void getAllWalksPaginated_shouldReturnPage_whenRequestIsValid() {
+        @DisplayName("GetAllWalksPaginated should return a page of walks when user is auth")
+        void getAllWalksPaginated_shouldReturnPage_whenUserIsAuth() {
             Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
             Page<Walk> walkPage = new PageImpl<>(List.of(walk), pageable, 1);
 
+            CustomUser user = new CustomUser();
+            user.setId(1L);
+            user.setRole(Role.USER);
+
+            when(walkRepository.findByUser(eq(user), any(Pageable.class))).thenReturn(walkPage);
+
+            Page<WalkResponse> result = walkService.getAllWalksPaginated(user, 0, 10, "id", "ASC");
+
+            assertEquals(1, result.getTotalElements());
+
+            verify(walkRepository, times(1)).findByUser(eq(user), any(Pageable.class));
+        }
+
+        @Test
+        @DisplayName("GetAllWalksPaginated should return a page of walks when user is admin")
+        void getAllWalksPaginated_shouldReturnPage_whenUserIsAdmin() {
+            Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
+            Page<Walk> walkPage = new PageImpl<>(List.of(walk), pageable, 1);
+
+            CustomUser admin = new CustomUser();
+            admin.setId(1L);
+            admin.setRole(Role.ADMIN);
+
             when(walkRepository.findAll(any(Pageable.class))).thenReturn(walkPage);
 
-            Page<WalkResponse> result = walkService.getAllWalksPaginated(0, 10, "id", "ASC");
+            Page<WalkResponse> result = walkService.getAllWalksPaginated(admin,0, 10, "id", "ASC");
 
             assertEquals(1, result.getTotalElements());
 

@@ -3,6 +3,7 @@ package com.backend.dogwalks.walk.service;
 import com.backend.dogwalks.exception.custom_exception.EntityNotFoundException;
 import com.backend.dogwalks.user.dto.admin.AdminUserMapper;
 import com.backend.dogwalks.user.entity.CustomUser;
+import com.backend.dogwalks.user.enums.Role;
 import com.backend.dogwalks.walk.dto.*;
 import com.backend.dogwalks.walk.entity.Walk;
 import com.backend.dogwalks.walk.repository.WalkRepository;
@@ -51,7 +52,7 @@ public class WalkService {
     }
 
     @Transactional(readOnly = true)
-    public Page<WalkResponse> getAllWalksPaginated(int page, int size, String sortBy, String sortDirection) {
+    public Page<WalkResponse> getAllWalksPaginated(CustomUser user, int page, int size, String sortBy, String sortDirection) {
 
         if (page < 0) throw new IllegalArgumentException("Page index must be 0 or greater");
         if (size <= 0) throw new IllegalArgumentException("Page size must be greater than 0");
@@ -70,7 +71,11 @@ public class WalkService {
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        return walkRepository.findAll(pageable).map(walk -> WalkMapper.toDto(walk));
+        if (user.getRole().equals(Role.ADMIN)) {
+            return walkRepository.findAll(pageable).map(walk -> WalkMapper.toDto(walk));
+        }
+
+        return walkRepository.findByUser(user, pageable).map(walk -> WalkMapper.toDto(walk));
     }
 
     @Transactional(readOnly = true)

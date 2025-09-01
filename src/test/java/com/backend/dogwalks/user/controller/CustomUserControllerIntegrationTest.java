@@ -40,6 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @Transactional
 @Import(IntegrationTestUtils.class)
+@DisplayName("Custom User Controller Integration Tests")
 public class CustomUserControllerIntegrationTest {
 
     @Container

@@ -36,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @Transactional
 @Import(IntegrationTestUtils.class)
+@DisplayName("Admin Controller Integration Tests")
 public class AdminControllerIntegrationTest {
 
     @Container
