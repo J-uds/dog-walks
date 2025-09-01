@@ -9,7 +9,7 @@ import com.backend.dogwalks.utils.IntegrationTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Nested;
+import org.junit.jupiter.api.Nested;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -152,7 +152,7 @@ public class AdminControllerIntegrationTest {
                             .param("size", "200")
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.size", lessThanOrEqualTo(100)))
+                    .andExpect(jsonPath("$.size", lessThanOrEqualTo(100)));
         }
 
         @Test
