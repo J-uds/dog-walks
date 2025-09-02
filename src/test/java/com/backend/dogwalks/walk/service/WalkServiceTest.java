@@ -1,4 +1,4 @@
-package com.backend.dogwalks.walk;
+package com.backend.dogwalks.walk.service;
 
 import com.backend.dogwalks.exception.custom_exception.EntityNotFoundException;
 import com.backend.dogwalks.user.entity.CustomUser;
@@ -9,7 +9,6 @@ import com.backend.dogwalks.walk.dto.WalkResponse;
 import com.backend.dogwalks.walk.dto.WalkSummaryResponse;
 import com.backend.dogwalks.walk.entity.Walk;
 import com.backend.dogwalks.walk.repository.WalkRepository;
-import com.backend.dogwalks.walk.service.WalkService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
