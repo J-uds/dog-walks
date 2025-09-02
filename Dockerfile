@@ -10,7 +10,7 @@ RUN mvn -B -DskipTests dependency:go-offline
 
 COPY src ./src
 
-RUN mvn clean package -DskipTests
+RUN mvn -B clean package -DskipTests
 
 # Run the app
 FROM eclipse-temurin:24-jre
