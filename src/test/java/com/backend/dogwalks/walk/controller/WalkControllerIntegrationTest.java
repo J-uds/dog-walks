@@ -1,4 +1,4 @@
-package com.backend.dogwalks.walk;
+package com.backend.dogwalks.walk.controller;
 
 import com.backend.dogwalks.user.entity.CustomUser;
 import com.backend.dogwalks.user.enums.Role;
