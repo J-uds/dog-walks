@@ -21,6 +21,10 @@ WORKDIR /app
 
 COPY --from=build /workspace/target/*.jar app.jar
 
+RUN chown -R dogwalks:dogwalks /app
+
+USER dogwalks
+
 EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
