@@ -9,8 +9,8 @@ spring:
       enabled: ALWAYS
   datasource:
     url: jdbc:mysql://mysql:3306/dogwalks?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-    username: ${MYSQL_USER:dog}
-    password: ${MYSQL_PASSWORD:dog}
+    username: ${DB_USER:dog}
+    password: ${DB_PASSWORD:dog}
     initialization-mode: always
   jpa:
     hibernate:
