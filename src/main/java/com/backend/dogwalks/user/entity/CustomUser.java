@@ -1,10 +1,18 @@
 package com.backend.dogwalks.user.entity;
 
 import com.backend.dogwalks.user.enums.Role;
+import com.backend.dogwalks.walk.entity.Walk;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -17,7 +25,7 @@ public class CustomUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(nullable = false, length = 50)
     private String username;
 
     @Column(nullable = false, unique = true, length = 50)
@@ -29,8 +37,34 @@ public class CustomUser {
     @Column(name = "img")
     private String userImgUrl;
 
-    @Column
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
+
+    @Column(nullable = false, name = "is_active")
+    private Boolean isActive = true;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Walk> walks = new ArrayList<>();
+
+    public CustomUser(String username, String email, String password /*String userImgUrl*/) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        /*this.userImgUrl = userImgUrl;*/
+    }
+
+    public CustomUser(String username, String email, String userImgUrl, Role role, Boolean isActive) {
+        this.username = username;
+        this.email = email;
+        this.userImgUrl = userImgUrl;
+        this.role = role;
+        this.isActive = isActive;
+    }
+
+   /* public CustomUser(String username, String userImgUrl) {
+        this.username = username;
+        this.userImgUrl = userImgUrl;
+    }*/
 }
 
