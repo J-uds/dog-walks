@@ -10,4 +10,5 @@ ${AnsiColor.CYAN}
                              ░██
                        ░███████
 
+${AnsiColor.MAGENTA}© 2025 DogWalks. Version 1.0
 ${AnsiColor.DEFAULT}
