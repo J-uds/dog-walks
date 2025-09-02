@@ -6,7 +6,7 @@ WORKDIR /workspace
 
 COPY pom.xml ./
 
-RUN mvn -B -q -DskipTests dependency:go-offline
+RUN mvn -B -DskipTests dependency:go-offline
 
 COPY src ./src
 
