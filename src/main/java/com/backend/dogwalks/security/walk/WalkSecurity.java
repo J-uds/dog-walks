@@ -21,6 +21,6 @@ public class WalkSecurity {
 
         CustomUser user = userDetails.getUser();
 
-        return walk.getUser().equals(user) || userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+        return walk.getUser().getId().equals(user.getId()) || userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
     }
 }
