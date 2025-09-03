@@ -248,8 +248,8 @@ JWT_SECRET=your_super_secret_jwt_key_at_least_256_bits_long_for_security
 JWT_EXPIRATION=86400000
 
 # Initial admin
-ADMIN_EMAIL=admin@dogwalks.com
-ADMIN_PASSWORD=AdminPassword123!
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD=AdminPassword123?
 
 # Server
 SERVER_PORT=8080
@@ -361,9 +361,9 @@ POST /api/register
 Content-Type: application/json
 
 {
-  "username": "maria_garcia",
+  "username": "maria",
   "email": "maria@example.com", 
-  "password": "SecurePass123!"
+  "password": "SecurePass123?"
 }
 ```
 
@@ -371,7 +371,7 @@ Content-Type: application/json
 ```json
 {
   "id": 1,
-  "username": "maria_garcia",
+  "username": "maria",
   "email": "maria@example.com"
 }
 ```
@@ -383,7 +383,7 @@ Content-Type: application/json
 
 {
   "email": "maria@example.com",
-  "password": "SecurePass123!"
+  "password": "SecurePass123?"
 }
 ```
 
@@ -392,7 +392,7 @@ Content-Type: application/json
 {
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "tokenType": "Bearer",
-  "username": "maria_garcia",
+  "username": "maria",
   "email": "maria@example.com"
 }
 ```
@@ -540,17 +540,17 @@ Authorization: Bearer {admin_jwt_token}
 
 ### Roles and Permissions
 
-| Endpoint | Public | USER | ADMIN |
-|----------|---------|------|-------|
-| `POST /api/register` | ✅ | ✅ | ✅ |
-| `POST /api/login` | ✅ | ✅ | ✅ |
-| `GET /api/walks/public/**` | ✅ | ✅ | ✅ |
-| `POST /api/walks` | ❌ | ✅ | ✅ |
+| Endpoint | Public | USER         | ADMIN |
+|----------|---------|--------------|-------|
+| `POST /api/register` | ✅ | ✅            | ✅ |
+| `POST /api/login` | ✅ | ✅            | ✅ |
+| `GET /api/walks/public/**` | ✅ | ✅            | ✅ |
+| `POST /api/walks` | ❌ | ✅            | ✅ |
 | `PUT /api/walks/{id}` | ❌ | ✅ (own only) | ✅ |
 | `DELETE /api/walks/{id}` | ❌ | ✅ (own only) | ✅ |
-| `GET /api/users/profile` | ❌ | ✅ | ✅ |
-| `PUT /api/users/profile/**` | ❌ | ✅ | ✅ |
-| `GET /api/admin/**` | ❌ | ❌ | ✅ |
+| `GET /api/users/profile` | ❌ | ✅ (own only) | ✅ |
+| `PUT /api/users/profile` | ❌ | ✅ (own only) | ✅ |
+| `GET /api/admin/**` | ❌ | ❌            | ✅ |
 
 ### JWT Configuration
 
@@ -684,11 +684,7 @@ docker-compose exec -T dogwalks-db mysql -u dog -p dogwalks < backup.sql
 - [ ] Geolocation with GPS coordinates
 - [ ] Walk rating system
 - [ ] Map service integration
-- [ ] Redis caching for better performance
-- [ ] Metrics with Micrometer/Actuator
-- [ ] Kubernetes deployment manifests
 - [ ] CI/CD pipeline with Docker
-- [ ] Load balancing for multiple instances
 
 ## 🤝 Contributing
 
