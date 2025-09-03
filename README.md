@@ -75,66 +75,22 @@ Dog Walks API is a backend service that allows users to manage dog walks. The ap
 
 ```
 src/main/java/com/backend/dogwalks/
-├── auth/
-│   ├── controller/     # AuthController - registration and login
-│   ├── dto/           # DTOs for authentication
-│   └── service/       # Authentication logic
-├── user/
-│   ├── controller/    # CustomUserController, AdminController
-│   ├── dto/          # User DTOs
-│   ├── entity/       # CustomUser entity
-│   ├── enums/        # Role enum
-│   ├── repository/   # UserRepository
-│   └── service/      # User services
-├── walk/
-│   ├── controller/   # WalkController
-│   ├── dto/         # Walk DTOs
-│   ├── entity/      # Walk entity
-│   ├── repository/  # WalkRepository
-│   └── service/     # Walk services
-├── security/
-│   └── user/
-│       ├── jwt/     # JwtUtil, JwtAuthFilter
-│       └── service/ # CustomUserDetailsService
-├── config/
-│   └── security/    # SecurityConfig
-└── exception/       # Global exception handling
+├── auth/             #Authentication 
+├── user/             # User management
+├── walk/             # Walk management
+├── security/         # JWT & UserDetailsService
+├── config/           # Security Config
+└── exception/        # Global exception handling
 ```
 
 ## 📊 Data Model
 
 ### CustomUser Entity
-```java
-@Entity
-@Table(name = "users")
-public class CustomUser {
-    private Long id;
-    private String username;        // Unique username
-    private String email;          // Unique email
-    private String password;       // BCrypt hash
-    private String userImgUrl;     // Profile image URL
-    private Role role;             // USER or ADMIN
-    private Boolean isActive;      // Active/inactive status
-    private List<Walk> walks;      // Created walks
-}
-```
+
+- id, username, email, password, userImgUrl, role, isActive, walks.
 
 ### Walk Entity
-```java
-@Entity
-@Table(name = "walks")
-public class Walk {
-    private Long id;
-    private String title;           // Walk title
-    private LocalDateTime createdAt;// Automatic creation date
-    private String location;        // Location
-    private Integer duration;       // Duration in minutes
-    private String description;     // Walk description
-    private String walkImgUrl;      // Walk image URL
-    private Boolean isActive;       // Active/inactive status
-    private CustomUser user;        // Creator user
-}
-```
+- id, title, createdAt, location, duration, description, walkImgUrl, isActive, user.
 
 ## ⚙️ Prerequisites
 
@@ -161,20 +117,20 @@ cd dog-walks
 ```
 
 #### Step 2: Set up environment variables
-Create a `.env` file in the project root (this part shows example values, change them as needed or wanted):
+Create a `.env` file in the project root (this part shows example values, change them as needed):
 ```env
 # Database Configuration
-DB_USER=dog
-DB_PASSWORD=dog
-DB_ROOT_PASSWORD=rootdog
+DB_USER=...
+DB_PASSWORD=...
+DB_ROOT_PASSWORD=...
 
 # JWT Configuration
-JWT_SECRET=your_super_secret_jwt_key_at_least_256_bits_long_for_security
-JWT_EXPIRATION=3600000
+JWT_SECRET=...
+JWT_EXPIRATION=...
 
 # Initial Admin User
-ADMIN_EMAIL=admin@example.com
-ADMIN_PASSWORD=AdminPassword123?
+ADMIN_EMAIL=...
+ADMIN_PASSWORD=...
 ```
 
 #### Step 3: Run with Docker Compose
@@ -191,31 +147,8 @@ docker-compose logs -f dogwalks-app
 
 #### Step 4: Verify the application
 The application will be available at:
-- **API**: `http://localhost:8080/api`
-- **Health Check**: `http://localhost:8080/actuator/health`
-- **Database**: `localhost:3307` (externally accessible)
 
-#### Docker Commands Reference
-```bash
-# Stop all services
-docker-compose down
-
-# Stop and remove volumes (deletes database data)
-docker-compose down -v
-
-# Rebuild and restart
-docker-compose up --build -d
-
-# View container logs
-docker-compose logs dogwalks-app
-docker-compose logs dogwalks-db
-
-# Access application container shell
-docker-compose exec dogwalks-app bash
-
-# Access database container
-docker-compose exec dogwalks-db mysql -u dog -p
-```
+**API**: `http://localhost:8080/api`
 
 ### Option 2: Manual Installation
 
@@ -229,9 +162,9 @@ cd dog-walks
 
 #### Step 2: Set up MySQL database
 ```sql
-CREATE DATABASE dogwalks;
-CREATE USER 'dogwalks_user'@'localhost' IDENTIFIED BY 'your_password';
-GRANT ALL PRIVILEGES ON dogwalks.* TO 'dogwalks_user'@'localhost';
+CREATE DATABASE databasename;
+CREATE USER 'databasename_user'@'localhost' IDENTIFIED BY 'your_password';
+GRANT ALL PRIVILEGES ON databasename.* TO 'databasename_user'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
@@ -239,20 +172,20 @@ FLUSH PRIVILEGES;
 Create a `.env` file in the project root:
 ```properties
 # Database
-DB_URL=jdbc:mysql://localhost:3306/dogwalks
-DB_USER=dogwalks_user
-DB_PASSWORD=your_password
+DB_URL=...
+DB_USER=...
+DB_PASSWORD=...
 
 # JWT
-JWT_SECRET=your_super_secret_jwt_key_at_least_256_bits_long_for_security
-JWT_EXPIRATION=86400000
+JWT_SECRET=...
+JWT_EXPIRATION=...
 
 # Initial admin
-ADMIN_EMAIL=admin@example.com
-ADMIN_PASSWORD=AdminPassword123?
+ADMIN_EMAIL=...
+ADMIN_PASSWORD=...
 
 # Server
-SERVER_PORT=8080
+SERVER_PORT=...
 ```
 
 #### Step 4: Build and run
@@ -298,45 +231,6 @@ For manual installation, use these variables in your `.env` file:
 - **Development**: Uses `.env` file variables
 - **Docker**: Optimized for container environment
 - **Testing**: Automatic configuration with TestContainers
-- **Production**: System environment variables
-
-### Docker Configuration Explained
-
-The Docker setup includes three main configuration files:
-
-#### 1. **docker-compose.yml** - Container Orchestration
-This file defines how your application containers work together:
-
-```yaml
-# Two services: your app and the database
-services:
-  dogwalks-app:    # Your Spring Boot application
-    build: .       # Build from Dockerfile in current directory
-    ports: "8080:8080"  # Maps port 8080 inside container to port 8080 on your computer
-    depends_on: dogwalks-db  # Wait for database to be ready
-    
-  dogwalks-db:     # MySQL database
-    image: mysql:8.0  # Use official MySQL 8.0 image
-    ports: "3307:3306"  # Maps MySQL port (avoid conflicts with local MySQL)
-```
-
-#### 2. **Dockerfile** - Application Container
-This file defines how to build your application container:
-
-```dockerfile
-# Multi-stage build for efficiency
-FROM maven:3.9.11-eclipse-temurin-21 AS build  # Build stage
-FROM eclipse-temurin:21-jre                    # Runtime stage (smaller)
-```
-
-#### 3. **application-docker.yml** - Docker-specific Configuration
-Special configuration when running in Docker:
-
-```yaml
-spring:
-  datasource:
-    url: jdbc:mysql://dogwalks-db:3306/dogwalks  # Uses Docker service name
-```
 
 ## 📚 API Usage
 
@@ -353,181 +247,17 @@ Authorization: Bearer {jwt_token}  # For protected endpoints
 
 ## 🛣️ Available Endpoints
 
-### 🔐 Authentication (Public)
+### 🔐 Public Endpoints
 
-#### User Registration
-```http
-POST /api/register
-Content-Type: application/json
+- Registration, login, list/view walks
 
-{
-  "username": "maria",
-  "email": "maria@example.com", 
-  "password": "SecurePass123?"
-}
-```
+### USER endpoints
 
-**Successful Response (201):**
-```json
-{
-  "id": 1,
-  "username": "maria",
-  "email": "maria@example.com"
-}
-```
+- Create/update/delete own walks, profile management
 
-#### Login
-```http
-POST /api/login
-Content-Type: application/json
+### ADMIN endpoints
 
-{
-  "email": "maria@example.com",
-  "password": "SecurePass123?"
-}
-```
-
-**Successful Response (200):**
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "tokenType": "Bearer",
-  "username": "maria",
-  "email": "maria@example.com"
-}
-```
-
-### 🐕 Walk Management
-
-#### Get walks (Public)
-```http
-GET /api/walks/public?page=0&size=10&sortBy=createdAt&sortDirection=DESC
-```
-
-#### View walk details (Public)
-```http
-GET /api/walks/public/{id}
-```
-
-#### Create walk (Requires authentication)
-```http
-POST /api/walks
-Authorization: Bearer {jwt_token}
-Content-Type: application/json
-
-{
-  "title": "Morning walk at Retiro",
-  "location": "Retiro Park, Madrid",
-  "duration": 60,
-  "description": "Peaceful walk through the park",
-  "walkImgUrl": "retiro.jpg",
-  "isActive": true
-}
-```
-
-#### Update own walk
-```http
-PUT /api/walks/{id}
-Authorization: Bearer {jwt_token}
-Content-Type: application/json
-
-{
-  "title": "Updated walk",
-  "duration": 90
-}
-```
-
-#### Delete own walk
-```http
-DELETE /api/walks/{id}
-Authorization: Bearer {jwt_token}
-```
-
-### 👤 User Profile Management
-
-#### Get my profile
-```http
-GET /api/users/profile
-Authorization: Bearer {jwt_token}
-```
-
-#### Update my profile
-```http
-PUT /api/users/profile
-Authorization: Bearer {jwt_token}
-Content-Type: application/json
-
-{
-  "username": "new_username",
-  "userImgUrl": "new_image.jpg"
-}
-```
-
-#### Update my email
-```http
-PUT /api/users/profile/email
-Authorization: Bearer {jwt_token}
-Content-Type: application/json
-
-{
-  "newEmail": "new@email.com",
-  "currentPassword": "my_current_password"
-}
-```
-
-#### Update my password
-```http
-PUT /api/users/profile/password
-Authorization: Bearer {jwt_token}
-Content-Type: application/json
-
-{
-  "currentPassword": "current_password",
-  "newPassword": "new_password_123!",
-  "confirmPassword": "new_password_123!"
-}
-```
-
-#### Deactivate my account
-```http
-DELETE /api/users/profile/deactivate
-Authorization: Bearer {jwt_token}
-```
-
-### 👨‍💼 Administration (ADMIN Only)
-
-#### List all users (paginated)
-```http
-GET /api/admin/users?page=0&size=10&sortBy=id&sortDir=ASC
-Authorization: Bearer {admin_jwt_token}
-```
-
-#### View specific user
-```http
-GET /api/admin/users/{id}
-Authorization: Bearer {admin_jwt_token}
-```
-
-#### Update user
-```http
-PUT /api/admin/users/{id}
-Authorization: Bearer {admin_jwt_token}
-Content-Type: application/json
-
-{
-  "username": "new_username",
-  "email": "new@email.com",
-  "userImgUrl": "image.jpg",
-  "role": "USER",
-  "isActive": true
-}
-```
-
-#### Delete user
-```http
-DELETE /api/admin/users/{id}
-Authorization: Bearer {admin_jwt_token}
-```
+- User management, role updates
 
 ## 🔒 Security and Authentication
 
@@ -552,13 +282,6 @@ Authorization: Bearer {admin_jwt_token}
 | `PUT /api/users/profile` | ❌ | ✅ (own only) | ✅ |
 | `GET /api/admin/**` | ❌ | ❌            | ✅ |
 
-### JWT Configuration
-
-- **Algorithm**: HMAC SHA-256
-- **Expiration**: Configurable (default 1 hour in Docker, 24 hours manual)
-- **Claims**: username, id, role, iat, exp
-- **Validation**: Automatic on each protected request
-
 ## 🧪 Testing
 
 The project includes complete integration tests using TestContainers with real MySQL.
@@ -578,77 +301,13 @@ docker run --rm dogwalks-test mvn test
 mvn test
 ```
 
-### Included Tests
-
-- **AuthControllerIntegrationTest**: Registration, login and validation tests
-- **AdminControllerIntegrationTest**: User administration tests
-- **CustomUserControllerIntegrationTest**: Profile management tests
-- **WalkControllerIntegrationTest**: Complete walk CRUD tests
-
-### Testing Features
-
-- **TestContainers**: MySQL 8.0 in container for real tests
-- **@Transactional**: Automatic rollback between tests
-- **Isolated data**: Each test cleans and prepares its data
-- **Complete validation**: Status codes, JSON responses, database
-
-### Run specific tests
-```bash
-# Authentication tests only
-mvn test -Dtest="*Auth*"
-
-# Administration tests only
-mvn test -Dtest="*Admin*"
-
-# Walk tests only
-mvn test -Dtest="*Walk*"
-```
-
 ## 🚀 Deployment
 
 ### Production Deployment with Docker
 
-#### Using Docker Compose in Production
-```bash
-# Set production environment variables
-export JWT_SECRET="your_super_secure_production_jwt_secret_key"
-export DB_PASSWORD="secure_production_password"
-export ADMIN_PASSWORD="secure_admin_password"
+#### Docker Compose recommended for Production
 
-# Run in production mode
-docker-compose -f docker-compose.yml up -d
-```
-
-#### Using Individual Docker Commands
-```bash
-# Create a network
-docker network create dogwalks-network
-
-# Run MySQL
-docker run -d \
-  --name dogwalks-db \
-  --network dogwalks-network \
-  -e MYSQL_DATABASE=dogwalks \
-  -e MYSQL_USER=dog \
-  -e MYSQL_PASSWORD=your_secure_password \
-  -e MYSQL_ROOT_PASSWORD=your_root_password \
-  -v dogwalks_data:/var/lib/mysql \
-  mysql:8.0
-
-# Build and run application
-docker build -t dogwalks-app .
-docker run -d \
-  --name dogwalks-app \
-  --network dogwalks-network \
-  -p 8080:8080 \
-  -e DB_URL="jdbc:mysql://dogwalks-db:3306/dogwalks" \
-  -e DB_USER=dog \
-  -e DB_PASSWORD=your_secure_password \
-  -e JWT_SECRET="your_production_jwt_secret" \
-  dogwalks-app
-```
-
-### Health Monitoring
+#### Health Monitoring
 
 The application includes health check endpoints:
 
@@ -660,8 +319,6 @@ curl http://localhost:8080/actuator/health
 docker-compose ps  # Shows health status
 ```
 
-### Backup and Data Management
-
 #### Database Backup with Docker
 ```bash
 # Create backup
@@ -671,25 +328,17 @@ docker-compose exec dogwalks-db mysqldump -u dog -p dogwalks > backup.sql
 docker-compose exec -T dogwalks-db mysql -u dog -p dogwalks < backup.sql
 ```
 
-#### Persistent Data
-- Database data is stored in Docker volume `mysql_data`
-- Data persists even when containers are recreated
-- Use `docker-compose down -v` only if you want to delete all data
-
 ## 🚀 Future Improvements
 
 - [ ] Enhanced pagination with location filters
 - [ ] Email notification system
 - [ ] Image upload API with Docker volume mounts
-- [ ] Geolocation with GPS coordinates
 - [ ] Walk rating system
-- [ ] Map service integration
 - [ ] CI/CD pipeline with Docker
 
 ## 📝 License
 
 This project is licensed under the **Apache License 2.0** - see the [LICENSE](LICENSE.txt) file for details.
-
 
 ## 👨‍💻 Author
 
