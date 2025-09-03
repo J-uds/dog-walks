@@ -686,34 +686,6 @@ docker-compose exec -T dogwalks-db mysql -u dog -p dogwalks < backup.sql
 - [ ] Map service integration
 - [ ] CI/CD pipeline with Docker
 
-## 🤝 Contributing
-
-1. Fork the project
-2. Create feature branch: `git checkout -b feature/new-functionality`
-3. Commit changes: `git commit -m 'Add new functionality'`
-4. Push to branch: `git push origin feature/new-functionality`
-5. Create Pull Request
-
-### Contribution Guidelines
-
-- Follow project code conventions
-- Write tests for new functionalities
-- Maintain high test coverage
-- Document API changes
-- Use descriptive commit messages
-- Test with Docker before submitting PR
-
-### Development with Docker
-```bash
-# Development mode with hot reload
-docker-compose -f docker-compose.dev.yml up
-
-# Run tests in development
-docker-compose exec dogwalks-app mvn test
-```
-
-## 📝 License
-
 ## 📝 License
 
 This project is licensed under the **Apache License 2.0** - see the [LICENSE](LICENSE.txt) file for details.
@@ -726,7 +698,6 @@ This project is licensed under the **Apache License 2.0** - see the [LICENSE](LI
 ## 📞 Support
 
 - Create an [Issue on GitHub](https://github.com/J-uds/dog-walks/issues)
-- Email: [Contact developer]
 
 ---
 
