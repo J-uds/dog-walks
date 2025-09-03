@@ -198,34 +198,9 @@ The application will be available at `http://localhost:8080`
 
 ## 🔧 Configuration
 
-### Docker Environment Variables
+- .env contains DB credentials, JWT secret, admin user
 
-When using Docker Compose, configure these variables in your `.env` file:
-
-| Variable | Description | Default | Example |
-|----------|-------------|---------|---------|
-| `DB_USER` | Database username | `dog` | `dog` |
-| `DB_PASSWORD` | Database password | `dog` | `mypassword` |
-| `DB_ROOT_PASSWORD` | MySQL root password | `rootdog` | `rootpassword` |
-| `JWT_SECRET` | JWT secret key (256+ bits) | `change-me` | `my_super_secret_key` |
-| `JWT_EXPIRATION` | Token expiration (ms) | `3600000` | `86400000` (24h) |
-| `ADMIN_EMAIL` | Initial admin email | `admin@example.com` | `admin@dogwalks.com` |
-| `ADMIN_PASSWORD` | Initial admin password | `admin123456.` | `AdminPass123!` |
-
-### Manual Installation Environment Variables
-
-For manual installation, use these variables in your `.env` file:
-
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `DB_URL` | MySQL connection URL | `jdbc:mysql://localhost:3306/dogwalks` |
-| `DB_USER` | Database username | `dogwalks_user` |
-| `DB_PASSWORD` | Database password | `your_secure_password` |
-| `JWT_SECRET` | JWT secret key | `my_super_secret_256_bits_key` |
-| `JWT_EXPIRATION` | Token expiration (ms) | `86400000` (24 hours) |
-| `ADMIN_EMAIL` | Initial admin email | `admin@dogwalks.com` |
-| `ADMIN_PASSWORD` | Initial admin password | `AdminPassword123!` |
-| `SERVER_PORT` | Application port | `8080` |
+- Supports Docker, Development and Testing profiles
 
 ### Application Profiles
 - **Development**: Uses `.env` file variables
