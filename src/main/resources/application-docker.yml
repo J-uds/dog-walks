@@ -9,7 +9,7 @@ spring:
       enabled: ALWAYS
 
   datasource:
-    url: jdbc:mysql://mysql:3306/dogwalks?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    url: ${DB_URL:jdbc:mysql://dogwalks-db:3306/dogwalks?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
     username: ${DB_USER:dog}
     password: ${DB_PASSWORD:dog}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -45,3 +45,12 @@ logging:
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
     com.backend.dogwalks: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
