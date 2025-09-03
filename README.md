@@ -1,6 +1,6 @@
 # 🐕 Dog Walks REST API
 
-A REST API built with Java Spring Boot for managing dog walks. Authenticated users can create and manage dog walks securely with differentiated roles.
+A REST API developed with Java Spring Boot for managing dog walks. Authenticated users can create and manage dog walks securely with differentiated roles.
 
 ## 📋 Table of Contents
 
@@ -11,11 +11,14 @@ A REST API built with Java Spring Boot for managing dog walks. Authenticated use
 - [Data Model](#data-model)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
+    - [Option 1: With Docker (Recommended)](#option-1-with-docker-recommended)
+    - [Option 2: Manual Installation](#option-2-manual-installation)
 - [Configuration](#configuration)
 - [API Usage](#api-usage)
 - [Available Endpoints](#available-endpoints)
 - [Security and Authentication](#security-and-authentication)
 - [Testing](#testing)
+- [Deployment](#deployment)
 - [Contributing](#contributing)
 
 ## 🎯 Description
@@ -29,9 +32,10 @@ Dog Walks API is a backend service that allows users to manage dog walks. The ap
 - 🐕 **Walk Management**: Complete CRUD for walks with detailed information
 - 👤 **Profile Management**: Users can update their personal data
 - 🛡️ **Advanced Security**: Protected endpoints and authorization validation
-- 📊 **Public Endpoints**: Unauthenticated access to query walks
+- 📊 **Public Endpoints**: Unauthenticated access to consult walks
 - 🧪 **Complete Testing**: Integration test suite with TestContainers
-- ⚙️ **Variable Configuration**: All configurations externalized
+- ⚙️ **Environment Configuration**: All configurations externalized
+- 🐳 **Containerization**: Easy deployment with Docker and Docker Compose
 
 ## 🛠️ Technologies Used
 
@@ -47,7 +51,7 @@ Dog Walks API is a backend service that allows users to manage dog walks. The ap
 - **MySQL Connector/J**: Official MySQL driver for Java
 
 ### Security
-- **JWT (JJWT 0.12.6)**: Secure JSON Web Tokens
+- **JWT (JJWT 0.12.6)**: Secure JSON Web tokens
 - **BCrypt**: Secure password hashing integrated in Spring Security
 
 ### Testing
@@ -62,6 +66,11 @@ Dog Walks API is a backend service that allows users to manage dog walks. The ap
 - **Spring Dotenv**: Environment variable management
 - **Maven**: Dependency management
 
+### Containerization
+- **Docker**: Application containerization
+- **Docker Compose**: Multi-container orchestration
+- **Multi-stage Build**: Optimized Docker image creation
+
 ## 🏗️ Project Architecture
 
 ```
@@ -72,14 +81,14 @@ src/main/java/com/backend/dogwalks/
 │   └── service/       # Authentication logic
 ├── user/
 │   ├── controller/    # CustomUserController, AdminController
-│   ├── dto/          # DTOs for users
+│   ├── dto/          # User DTOs
 │   ├── entity/       # CustomUser entity
 │   ├── enums/        # Role enum
 │   ├── repository/   # UserRepository
 │   └── service/      # User services
 ├── walk/
 │   ├── controller/   # WalkController
-│   ├── dto/         # DTOs for walks
+│   ├── dto/         # Walk DTOs
 │   ├── entity/      # Walk entity
 │   ├── repository/  # WalkRepository
 │   └── service/     # Walk services
@@ -129,6 +138,11 @@ public class Walk {
 
 ## ⚙️ Prerequisites
 
+### For Docker Installation (Recommended)
+- **Docker 20.0+**
+- **Docker Compose 2.0+**
+
+### For Manual Installation
 - **Java 21** or higher
 - **Maven 3.6+**
 - **MySQL 8.0** or higher
@@ -136,13 +150,84 @@ public class Walk {
 
 ## 🚀 Installation
 
-### 1. Clone the repository
+### Option 1: With Docker (Recommended)
+
+This is the easiest way to run the application. Docker will handle all the setup automatically.
+
+#### Step 1: Clone the repository
 ```bash
 git clone https://github.com/J-uds/dog-walks.git
 cd dog-walks
 ```
 
-### 2. Setup MySQL database
+#### Step 2: Set up environment variables
+Create a `.env` file in the project root (this part shows example values, change them as needed or wanted):
+```env
+# Database Configuration
+DB_USER=dog
+DB_PASSWORD=dog
+DB_ROOT_PASSWORD=rootdog
+
+# JWT Configuration
+JWT_SECRET=your_super_secret_jwt_key_at_least_256_bits_long_for_security
+JWT_EXPIRATION=3600000
+
+# Initial Admin User
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD=AdminPassword123?
+```
+
+#### Step 3: Run with Docker Compose
+```bash
+# Build and start all services
+docker-compose up -d
+
+# Check if services are running
+docker-compose ps
+
+# View logs
+docker-compose logs -f dogwalks-app
+```
+
+#### Step 4: Verify the application
+The application will be available at:
+- **API**: `http://localhost:8080/api`
+- **Health Check**: `http://localhost:8080/actuator/health`
+- **Database**: `localhost:3307` (externally accessible)
+
+#### Docker Commands Reference
+```bash
+# Stop all services
+docker-compose down
+
+# Stop and remove volumes (deletes database data)
+docker-compose down -v
+
+# Rebuild and restart
+docker-compose up --build -d
+
+# View container logs
+docker-compose logs dogwalks-app
+docker-compose logs dogwalks-db
+
+# Access application container shell
+docker-compose exec dogwalks-app bash
+
+# Access database container
+docker-compose exec dogwalks-db mysql -u dog -p
+```
+
+### Option 2: Manual Installation
+
+Choose this option if you prefer to install everything manually or for development purposes.
+
+#### Step 1: Clone the repository
+```bash
+git clone https://github.com/J-uds/dog-walks.git
+cd dog-walks
+```
+
+#### Step 2: Set up MySQL database
 ```sql
 CREATE DATABASE dogwalks;
 CREATE USER 'dogwalks_user'@'localhost' IDENTIFIED BY 'your_password';
@@ -150,7 +235,7 @@ GRANT ALL PRIVILEGES ON dogwalks.* TO 'dogwalks_user'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
-### 3. Configure environment variables
+#### Step 3: Configure environment variables
 Create a `.env` file in the project root:
 ```properties
 # Database
@@ -159,7 +244,7 @@ DB_USER=dogwalks_user
 DB_PASSWORD=your_password
 
 # JWT
-JWT_SECRET=your_very_long_and_secure_secret_key_at_least_256_bits
+JWT_SECRET=your_super_secret_jwt_key_at_least_256_bits_long_for_security
 JWT_EXPIRATION=86400000
 
 # Initial admin
@@ -170,7 +255,7 @@ ADMIN_PASSWORD=AdminPassword123!
 SERVER_PORT=8080
 ```
 
-### 4. Compile and run
+#### Step 4: Build and run
 ```bash
 mvn clean compile
 mvn spring-boot:run
@@ -180,23 +265,78 @@ The application will be available at `http://localhost:8080`
 
 ## 🔧 Configuration
 
-### Required Environment Variables
+### Docker Environment Variables
+
+When using Docker Compose, configure these variables in your `.env` file:
+
+| Variable | Description | Default | Example |
+|----------|-------------|---------|---------|
+| `DB_USER` | Database username | `dog` | `dog` |
+| `DB_PASSWORD` | Database password | `dog` | `mypassword` |
+| `DB_ROOT_PASSWORD` | MySQL root password | `rootdog` | `rootpassword` |
+| `JWT_SECRET` | JWT secret key (256+ bits) | `change-me` | `my_super_secret_key` |
+| `JWT_EXPIRATION` | Token expiration (ms) | `3600000` | `86400000` (24h) |
+| `ADMIN_EMAIL` | Initial admin email | `admin@example.com` | `admin@dogwalks.com` |
+| `ADMIN_PASSWORD` | Initial admin password | `admin123456.` | `AdminPass123!` |
+
+### Manual Installation Environment Variables
+
+For manual installation, use these variables in your `.env` file:
 
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `DB_URL` | MySQL connection URL | `jdbc:mysql://localhost:3306/dogwalks` |
-| `DB_USER` | Database user | `dogwalks_user` |
+| `DB_USER` | Database username | `dogwalks_user` |
 | `DB_PASSWORD` | Database password | `your_secure_password` |
-| `JWT_SECRET` | JWT secret key | `my_super_secret_256_bit_key` |
-| `JWT_EXPIRATION` | JWT expiration time (ms) | `86400000` (24 hours) |
+| `JWT_SECRET` | JWT secret key | `my_super_secret_256_bits_key` |
+| `JWT_EXPIRATION` | Token expiration (ms) | `86400000` (24 hours) |
 | `ADMIN_EMAIL` | Initial admin email | `admin@dogwalks.com` |
-| `ADMIN_PASSWORD` | Admin password | `AdminPassword123!` |
-| `SERVER_PORT` | Server port | `8080` |
+| `ADMIN_PASSWORD` | Initial admin password | `AdminPassword123!` |
+| `SERVER_PORT` | Application port | `8080` |
 
-### Application profiles
-- **Development**: Uses variables from `.env` file
+### Application Profiles
+- **Development**: Uses `.env` file variables
+- **Docker**: Optimized for container environment
 - **Testing**: Automatic configuration with TestContainers
 - **Production**: System environment variables
+
+### Docker Configuration Explained
+
+The Docker setup includes three main configuration files:
+
+#### 1. **docker-compose.yml** - Container Orchestration
+This file defines how your application containers work together:
+
+```yaml
+# Two services: your app and the database
+services:
+  dogwalks-app:    # Your Spring Boot application
+    build: .       # Build from Dockerfile in current directory
+    ports: "8080:8080"  # Maps port 8080 inside container to port 8080 on your computer
+    depends_on: dogwalks-db  # Wait for database to be ready
+    
+  dogwalks-db:     # MySQL database
+    image: mysql:8.0  # Use official MySQL 8.0 image
+    ports: "3307:3306"  # Maps MySQL port (avoid conflicts with local MySQL)
+```
+
+#### 2. **Dockerfile** - Application Container
+This file defines how to build your application container:
+
+```dockerfile
+# Multi-stage build for efficiency
+FROM maven:3.9.11-eclipse-temurin-21 AS build  # Build stage
+FROM eclipse-temurin:21-jre                    # Runtime stage (smaller)
+```
+
+#### 3. **application-docker.yml** - Docker-specific Configuration
+Special configuration when running in Docker:
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:mysql://dogwalks-db:3306/dogwalks  # Uses Docker service name
+```
 
 ## 📚 API Usage
 
@@ -205,7 +345,7 @@ The application will be available at `http://localhost:8080`
 http://localhost:8080/api
 ```
 
-### Required headers
+### Required Headers
 ```http
 Content-Type: application/json
 Authorization: Bearer {jwt_token}  # For protected endpoints
@@ -227,7 +367,7 @@ Content-Type: application/json
 }
 ```
 
-**Successful response (201):**
+**Successful Response (201):**
 ```json
 {
   "id": 1,
@@ -247,7 +387,7 @@ Content-Type: application/json
 }
 ```
 
-**Successful response (200):**
+**Successful Response (200):**
 ```json
 {
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
@@ -259,7 +399,7 @@ Content-Type: application/json
 
 ### 🐕 Walk Management
 
-#### Query walks (Public)
+#### Get walks (Public)
 ```http
 GET /api/walks/public?page=0&size=10&sortBy=createdAt&sortDirection=DESC
 ```
@@ -276,7 +416,7 @@ Authorization: Bearer {jwt_token}
 Content-Type: application/json
 
 {
-  "title": "Morning Walk at Retiro",
+  "title": "Morning walk at Retiro",
   "location": "Retiro Park, Madrid",
   "duration": 60,
   "description": "Peaceful walk through the park",
@@ -354,7 +494,7 @@ DELETE /api/users/profile/deactivate
 Authorization: Bearer {jwt_token}
 ```
 
-### 👨‍💼 Administration (ADMIN only)
+### 👨‍💼 Administration (ADMIN Only)
 
 #### List all users (paginated)
 ```http
@@ -375,7 +515,7 @@ Authorization: Bearer {admin_jwt_token}
 Content-Type: application/json
 
 {
-  "username": "new_name",
+  "username": "new_username",
   "email": "new@email.com",
   "userImgUrl": "image.jpg",
   "role": "USER",
@@ -415,7 +555,7 @@ Authorization: Bearer {admin_jwt_token}
 ### JWT Configuration
 
 - **Algorithm**: HMAC SHA-256
-- **Expiration**: Configurable (default 24 hours)
+- **Expiration**: Configurable (default 1 hour in Docker, 24 hours manual)
 - **Claims**: username, id, role, iat, exp
 - **Validation**: Automatic on each protected request
 
@@ -423,12 +563,22 @@ Authorization: Bearer {admin_jwt_token}
 
 The project includes complete integration tests using TestContainers with real MySQL.
 
-### Run all tests
+### Run tests with Docker
+```bash
+# Using Docker Compose
+docker-compose run --rm dogwalks-app mvn test
+
+# Or build a test image
+docker build -t dogwalks-test --target build .
+docker run --rm dogwalks-test mvn test
+```
+
+### Run tests manually
 ```bash
 mvn test
 ```
 
-### Included tests
+### Included Tests
 
 - **AuthControllerIntegrationTest**: Registration, login and validation tests
 - **AdminControllerIntegrationTest**: User administration tests
@@ -452,68 +602,146 @@ mvn test -Dtest="*Admin*"
 
 # Walk tests only
 mvn test -Dtest="*Walk*"
-``` codes, JSON responses, base de datos
-
-### Ejecutar tests específicos
-```bash
-# Solo tests de autenticación
-mvn test -Dtest="*Auth*"
-
-# Solo tests de administración  
-mvn test -Dtest="*Admin*"
-
-# Solo tests de paseos
-mvn test -Dtest="*Walk*"
 ```
 
-## 🚀 Próximas Mejoras
+## 🚀 Deployment
 
-- [ ] Paginación mejorada con filtros por ubicación
-- [ ] Sistema de notificaciones por email
-- [ ] API de subida de imágenes
-- [ ] Geolocalización con coordenadas GPS
-- [ ] Sistema de valoraciones de paseos
-- [ ] Integración con servicios de mapas
-- [ ] Cache con Redis para mejor rendimiento
-- [ ] Métricas con Micrometer/Actuator
+### Production Deployment with Docker
 
-## 🤝 Contribuir
+#### Using Docker Compose in Production
+```bash
+# Set production environment variables
+export JWT_SECRET="your_super_secure_production_jwt_secret_key"
+export DB_PASSWORD="secure_production_password"
+export ADMIN_PASSWORD="secure_admin_password"
 
-1. Fork del proyecto
-2. Crear rama para feature: `git checkout -b feature/nueva-funcionalidad`
-3. Commit de cambios: `git commit -m 'Agregar nueva funcionalidad'`
-4. Push a la rama: `git push origin feature/nueva-funcionalidad`
-5. Crear Pull Request
+# Run in production mode
+docker-compose -f docker-compose.yml up -d
+```
 
-### Guías de Contribución
+#### Using Individual Docker Commands
+```bash
+# Create a network
+docker network create dogwalks-network
 
-- Seguir las convenciones de código del proyecto
-- Escribir tests para nuevas funcionalidades
-- Mantener cobertura de tests alta
-- Documentar cambios en la API
-- Usar mensajes de commit descriptivos
+# Run MySQL
+docker run -d \
+  --name dogwalks-db \
+  --network dogwalks-network \
+  -e MYSQL_DATABASE=dogwalks \
+  -e MYSQL_USER=dog \
+  -e MYSQL_PASSWORD=your_secure_password \
+  -e MYSQL_ROOT_PASSWORD=your_root_password \
+  -v dogwalks_data:/var/lib/mysql \
+  mysql:8.0
 
-## 📝 Licencia
+# Build and run application
+docker build -t dogwalks-app .
+docker run -d \
+  --name dogwalks-app \
+  --network dogwalks-network \
+  -p 8080:8080 \
+  -e DB_URL="jdbc:mysql://dogwalks-db:3306/dogwalks" \
+  -e DB_USER=dog \
+  -e DB_PASSWORD=your_secure_password \
+  -e JWT_SECRET="your_production_jwt_secret" \
+  dogwalks-app
+```
 
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.md) para detalles.
+### Health Monitoring
 
-## 👨‍💻 Autor
+The application includes health check endpoints:
+
+```bash
+# Check application health
+curl http://localhost:8080/actuator/health
+
+# Docker health checks are automatic
+docker-compose ps  # Shows health status
+```
+
+### Backup and Data Management
+
+#### Database Backup with Docker
+```bash
+# Create backup
+docker-compose exec dogwalks-db mysqldump -u dog -p dogwalks > backup.sql
+
+# Restore backup
+docker-compose exec -T dogwalks-db mysql -u dog -p dogwalks < backup.sql
+```
+
+#### Persistent Data
+- Database data is stored in Docker volume `mysql_data`
+- Data persists even when containers are recreated
+- Use `docker-compose down -v` only if you want to delete all data
+
+## 🚀 Future Improvements
+
+- [ ] Enhanced pagination with location filters
+- [ ] Email notification system
+- [ ] Image upload API with Docker volume mounts
+- [ ] Geolocation with GPS coordinates
+- [ ] Walk rating system
+- [ ] Map service integration
+- [ ] Redis caching for better performance
+- [ ] Metrics with Micrometer/Actuator
+- [ ] Kubernetes deployment manifests
+- [ ] CI/CD pipeline with Docker
+- [ ] Load balancing for multiple instances
+
+## 🤝 Contributing
+
+1. Fork the project
+2. Create feature branch: `git checkout -b feature/new-functionality`
+3. Commit changes: `git commit -m 'Add new functionality'`
+4. Push to branch: `git push origin feature/new-functionality`
+5. Create Pull Request
+
+### Contribution Guidelines
+
+- Follow project code conventions
+- Write tests for new functionalities
+- Maintain high test coverage
+- Document API changes
+- Use descriptive commit messages
+- Test with Docker before submitting PR
+
+### Development with Docker
+```bash
+# Development mode with hot reload
+docker-compose -f docker-compose.dev.yml up
+
+# Run tests in development
+docker-compose exec dogwalks-app mvn test
+```
+
+## 📝 License
+
+## 📝 License
+
+This project is licensed under the **Apache License 2.0** - see the [LICENSE](LICENSE.txt) file for details.
+
+
+## 👨‍💻 Author
 
 **J-uds** - [GitHub](https://github.com/J-uds)
 
-## 📞 Soporte
+## 📞 Support
 
-- Crear un [Issue en GitHub](https://github.com/J-uds/dog-walks/issues)
-- Email: [Contactar al desarrollador]
+- Create an [Issue on GitHub](https://github.com/J-uds/dog-walks/issues)
+- Email: [Contact developer]
 
 ---
 
-⭐ Si este proyecto te resultó útil, ¡dale una estrella en GitHub!
+⭐ If this project was useful to you, give it a star on GitHub!
 
-## 📚 Recursos Adicionales
+## 📚 Additional Resources
 
 - [Spring Boot Documentation](https://spring.io/projects/spring-boot)
 - [Spring Security Reference](https://docs.spring.io/spring-security/reference/)
 - [JWT Introduction](https://jwt.io/introduction)
 - [TestContainers Documentation](https://testcontainers.com)
 - [MySQL 8.0 Reference Manual](https://dev.mysql.com/doc/refman/8.0/en/)
+- [Docker Documentation](https://docs.docker.com/)
+- [Docker Compose Guide](https://docs.docker.com/compose/)
