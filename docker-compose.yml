@@ -39,19 +39,18 @@ services:
       MYSQL_DATABASE: dogwalks
       MYSQL_USER: ${DB_USER:-dog}
       MYSQL_PASSWORD: ${DB_PASSWORD:-dog}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootdog}
+      MYSQL_ROOT_PASSWORD: rootdog
     ports:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     restart: unless-stopped
     healthcheck:
-      test: > 
-        CMD mysqladmin ping -h localhost -u ${DB_USER:-dog} -p${DB_PASSWORD:-dog}
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootdog"]
       interval: 10s
       timeout: 5s
-      retries: 5
-      start_period: 30s
+      retries: 10
+      start_period: 90s
     networks:
       - dogwalks-network
 
