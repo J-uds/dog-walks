@@ -12,7 +12,7 @@ services:
       SPRING_PROFILES_ACTIVE: docker
       SERVER_PORT: 8080
 
-      DB_URL: jdbc:mysql://dogwalks-db:3306/dogwalks?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      DB_URL: ${DB_URL:-jdbc:mysql://dogwalks-db:3306/dogwalks?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
       DB_USER: ${DB_USER:-dog}
       DB_PASSWORD: ${DB_PASSWORD:-dog}
 
