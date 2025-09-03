@@ -1,0 +1,113 @@
+.
+|-- src
+|   |-- main
+|   |   |-- java
+|   |   |   `-- com
+|   |   |       `-- backend
+|   |   |           `-- dogwalks
+|   |   |               |-- auth
+|   |   |               |   |-- controller
+|   |   |               |   |-- dto
+|   |   |               |   |   |-- login
+|   |   |               |   |   `-- register
+|   |   |               |   `-- service
+|   |   |               |-- config
+|   |   |               |   `-- security
+|   |   |               |-- exception
+|   |   |               |   `-- custom_exception
+|   |   |               |-- security
+|   |   |               |   |-- user
+|   |   |               |   |   `-- jwt
+|   |   |               |   `-- walk
+|   |   |               |-- user
+|   |   |               |   |-- controller
+|   |   |               |   |-- dto
+|   |   |               |   |   |-- admin
+|   |   |               |   |   `-- user
+|   |   |               |   |-- entity
+|   |   |               |   |-- enums
+|   |   |               |   |-- repository
+|   |   |               |   `-- service
+|   |   |               `-- walk
+|   |   |                   |-- controller
+|   |   |                   |-- dto
+|   |   |                   |-- entity
+|   |   |                   |-- repository
+|   |   |                   `-- service
+|   |   `-- resources
+|   |       |-- static
+|   |       `-- templates
+|   `-- test
+|       |-- java
+|       |   `-- com
+|       |       `-- backend
+|       |           `-- dogwalks
+|       |               |-- auth
+|       |               |   |-- controller
+|       |               |   `-- service
+|       |               |-- security
+|       |               |   `-- user
+|       |               |       `-- jwt
+|       |               |-- user
+|       |               |   |-- controller
+|       |               |   `-- service
+|       |               |-- utils
+|       |               `-- walk
+|       |                   |-- controller
+|       |                   `-- service
+|       `-- resources
+`-- target
+    |-- classes
+    |   `-- com
+    |       `-- backend
+    |           `-- dogwalks
+    |               |-- auth
+    |               |   |-- controller
+    |               |   |-- dto
+    |               |   |   |-- login
+    |               |   |   `-- register
+    |               |   `-- service
+    |               |-- config
+    |               |   `-- security
+    |               |-- exception
+    |               |   `-- custom_exception
+    |               |-- security
+    |               |   |-- user
+    |               |   |   `-- jwt
+    |               |   `-- walk
+    |               |-- user
+    |               |   |-- controller
+    |               |   |-- dto
+    |               |   |   |-- admin
+    |               |   |   `-- user
+    |               |   |-- entity
+    |               |   |-- enums
+    |               |   |-- repository
+    |               |   `-- service
+    |               `-- walk
+    |                   |-- controller
+    |                   |-- dto
+    |                   |-- entity
+    |                   |-- repository
+    |                   `-- service
+    |-- generated-sources
+    |   `-- annotations
+    |-- generated-test-sources
+    |   `-- test-annotations
+    `-- test-classes
+        `-- com
+            `-- backend
+                `-- dogwalks
+                    |-- auth
+                    |   |-- controller
+                    |   `-- service
+                    |-- security
+                    |   `-- user
+                    |       `-- jwt
+                    |-- user
+                    |   |-- controller
+                    |   `-- service
+                    |-- utils
+                    `-- walk
+
+110 directories
