@@ -42,11 +42,11 @@ jobs:
         cache: maven
         
     # Step 3: Wait for MySQL to be ready
-    - name: Wait MySQL
-      run: |
-        while ! mysqladmin ping -h"127.0.0.1" -P3306 -uroot -prootgithub --silent; do
-          sleep 1
-        done
+#    - name: Wait MySQL
+#      run: |
+#        while ! mysqladmin ping -h"127.0.0.1" -P3306 -uroot -prootgithub --silent; do
+#          sleep 1
+#        done
         
     # Step 4: Run tests
     - name: Run tests
