@@ -1,21 +1,39 @@
-target
-.git
-.gitignore
-.idea
+### Build/Compilation ###
+target/
+build/
+dist/
+nbbuild/
+nbdist/
+
+### IDE metadata ###
+.idea/
 *.iws
 *.iml
 *.ipr
-*.log
 .vscode/
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-target/
-build/
-README*
-.mvn
+nbproject/private/
+*.class
+
+### Maven configuration ###
+.mvn/
+
+### Git control files ###
+.git
+.gitignore
+
+### Logs and temporary files ###
+*.log
+*.tmp
+*.bak
+*.swp
 .DS_Store
+
+### Environment variables / secrets ###
 .env
-structure.txt
+
+### Documentation and auxiliary files ###
+README*
+
+### Docker ###
+docker-compose.yml
+Dockerfile

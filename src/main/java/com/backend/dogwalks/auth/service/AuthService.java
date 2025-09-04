@@ -7,7 +7,6 @@ import com.backend.dogwalks.auth.dto.register.RegisterMapper;
 import com.backend.dogwalks.auth.dto.register.RegisterRequest;
 import com.backend.dogwalks.auth.dto.register.RegisterResponse;
 import com.backend.dogwalks.exception.custom_exception.EntityAlreadyExistsException;
-import com.backend.dogwalks.exception.custom_exception.EntityNotFoundException;
 import com.backend.dogwalks.exception.custom_exception.InvalidCredentialsException;
 import com.backend.dogwalks.exception.custom_exception.UserNotActiveException;
 import com.backend.dogwalks.security.user.CustomUserDetails;
