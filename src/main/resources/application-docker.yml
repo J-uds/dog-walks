@@ -20,7 +20,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     defer-datasource-initialization: true
     show-sql: true
     properties:
@@ -53,4 +53,4 @@ management:
         include: health, info
   endpoint:
     health:
-      show-details: always
+      show-details: never
