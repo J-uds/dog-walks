@@ -17,9 +17,9 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: rootgithub
-          MYSQL_DATABASE: dogwalks_test
-          MYSQL_USER: test_user
-          MYSQL_PASSWORD: test_password
+          MYSQL_DATABASE: dogwalks_github_test
+          MYSQL_USER: github_test_user
+          MYSQL_PASSWORD: github_test_password
         ports:
           - 3306:3306
         options: >-
