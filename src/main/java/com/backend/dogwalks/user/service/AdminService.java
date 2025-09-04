@@ -129,5 +129,4 @@ public class AdminService {
 
         return customUserRepository.findById(id). orElseThrow(() -> new EntityNotFoundException("User with id: " + id + " not found"));
     }
-
 }

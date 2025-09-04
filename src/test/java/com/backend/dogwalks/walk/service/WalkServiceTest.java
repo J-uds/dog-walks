@@ -257,5 +257,4 @@ public class WalkServiceTest {
             verify(walkRepository, times(1)).findById(1L);
         }
     }
-
 }
