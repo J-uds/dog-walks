@@ -52,9 +52,9 @@ jobs:
     - name: Run tests
       run: mvn clean test
       env:
-        DB_URL_LOCAL: jdbc:mysql://localhost:3306/dogwalks_test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-        DB_ROOT_USER: test_user
-        DB_ROOT_PASSWORD: test_password
+        DB_URL_LOCAL: jdbc:mysql://localhost:3306/dogwalks_github_test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+        DB_ROOT_USER: github_test_user
+        DB_ROOT_PASSWORD: github_test_password
         JWT_SECRET: test-secret-key-for-github-actions
         JWT_EXPIRATION: 3600000
         ADMIN_EMAIL: admin@test.com
