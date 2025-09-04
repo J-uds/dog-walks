@@ -10,5 +10,5 @@ ${AnsiColor.CYAN}
                              ░██
                        ░███████
 
-${AnsiColor.MAGENTA}© 2025 DogWalks. Version 1.0. Licenced under Apache Licence 2.0.
+${AnsiColor.MAGENTA}© 2025 DogWalks. Version 1.0. Licensed under the Apache License, Version 2.0
 ${AnsiColor.DEFAULT}
