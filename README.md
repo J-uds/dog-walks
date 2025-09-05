@@ -4,22 +4,22 @@ A REST API developed with Java Spring Boot for managing dog walks. Authenticated
 
 ## 📋 Table of Contents
 
-- [Description](#description)
-- [Key Features](#key-features)
-- [Technologies Used](#technologies-used)
-- [Project Architecture](#project-architecture)
-- [Data Model](#data-model)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-    - [Option 1: With Docker (Recommended)](#option-1-with-docker-recommended)
-    - [Option 2: Manual Installation](#option-2-manual-installation)
-- [Configuration](#configuration)
-- [API Usage](#api-usage)
-- [Available Endpoints](#available-endpoints)
-- [Security and Authentication](#security-and-authentication)
-- [Testing](#testing)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
+- [Description](#-description)
+- [Key Features](#-key-features)
+- [Technologies Used](#-technologies-used)
+- [Project Architecture](#-project-architecture)
+- [Data Model](#-data-model)
+- [Prerequisites](#-prerequisites)
+- [Installation](#-installation)
+    - [Option 1: With Docker (Recommended)](#-option-1-with-docker-recommended)
+    - [Option 2: Manual Installation](#-option-2-manual-installation)
+- [Configuration](#-configuration)
+- [API Usage](#-api-usage)
+- [Available Endpoints](#-available-endpoints)
+- [Security and Authentication](#-security-and-authentication)
+- [Testing](#-testing)
+- [Deployment](#-deployment)
+- [Contributing](#-contributing)
 
 ## 🎯 Description
 
