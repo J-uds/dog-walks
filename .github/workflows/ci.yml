@@ -23,7 +23,23 @@ jobs:
       - name: Make Maven wrapper executable
         run: chmod +x ./mvnw
 
-      - name: Run tests
-        run: ./mvnw clean test
+      - name: Start Docker service
+        run: |
+          sudo systemctl start docker
+          sudo docker info
+
+      - name: Run unit tests
+        run: ./mvnw test -Dtest="**/*Test" -DfailIfNoTests=false
+        env:
+          SPRING_PROFILES_ACTIVE: test
+          SPRING_DATASOURCE_URL: jdbc:h2:mem:testdb
+          SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.h2.Driver
+          SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+
+      - name: Run integration tests
+        run: ./mvnw test -Dtest="**/*IntegrationTest" -DfailIfNoTests=false
         env:
           TESTCONTAINERS_RYUK_DISABLED: true
+          TESTCONTAINERS_CHECKS_DISABLE: true
+          DOCKER_HOST: unix:///var/run/docker.sock
+          SPRING_PROFILES_ACTIVE: test
