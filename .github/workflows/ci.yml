@@ -1,74 +1,51 @@
-name: CI - Continuous Integration
+name: CI
 
-# When executes?
 on:
   push:
-    branches: [ main, dev ]  # when upload to main or dev
+    branches: [ main ]
   pull_request:
-    branches: [ main ]          # when performing pull to main
+    branches: [ main ]
 
 jobs:
-  test:
-    name: Run test and analysis
-    runs-on: ubuntu-latest      # Máquina virtual donde se ejecuta
-    
-#    services:
-#      mysql:
-#        image: mysql:8.0
-#        env:
-#          MYSQL_ROOT_PASSWORD: rootgithub
-#          MYSQL_DATABASE: dogwalks_github_test
-#          MYSQL_USER: github_test_user
-#          MYSQL_PASSWORD: github_test_password
-#        ports:
-#          - 3306:3306
-#        options: >-
-#          --health-cmd="mysqladmin ping --silent"
-#          --health-interval=10s
-#          --health-timeout=5s
-#          --health-retries=3
-    
+  build-and-test:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: dogwalks_test
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_password
+        options: >-
+          --health-cmd "mysqladmin ping --silent"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 3306:3306
+
     steps:
-    # Step 1: Download code
-    - name: Checkout código
-      uses: actions/checkout@v4
-      
-    # Step 2: Configure Java 
-    - name: Configure Java 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        cache: maven
-        
-    # Step 3: Wait for MySQL to be ready
-#    - name: Wait MySQL
-#      run: |
-#        while ! mysqladmin ping -h"127.0.0.1" -P3306 -uroot -prootgithub --silent; do
-#          sleep 1
-#        done
-        
-    # Step 4: Run tests
-    - name: Run tests
-      run: mvn clean test
-      env:
-        DB_URL_LOCAL: jdbc:mysql://localhost:3306/dogwalks_github_test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-        DB_ROOT_USER: github_test_user
-        DB_ROOT_PASSWORD: github_test_password
-        JWT_SECRET: test-secret-key-for-github-actions
-        JWT_EXPIRATION: 3600000
-        ADMIN_EMAIL: admin@test.com
-        ADMIN_PASSWORD: TestPassword123!
-        
-    # Step 5: Compile the app
-    - name: Compile app
-      run: mvn clean compile
-      
-    # Step 6: Generate coverage report (optional)
-    - name: Generate coverage report
-      run: mvn jacoco:report
-      
-    # Step 7: Upload coverage reports
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      if: success()
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build project and run tests
+        run: mvn clean verify -Dspring.profiles.active=test
+        env:
+          SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/dogwalks_test
+          SPRING_DATASOURCE_USERNAME: test_user
+          SPRING_DATASOURCE_PASSWORD: test_password
