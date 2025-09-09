@@ -43,9 +43,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
+      - name: Enable Docker
+        run: |
+          sudo systemctl start docker
+          docker info
+
       - name: Build project and run tests
         run: mvn clean verify -Dspring.profiles.active=test
-        env:
-          SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/dogwalks_test
-          SPRING_DATASOURCE_USERNAME: test_user
-          SPRING_DATASOURCE_PASSWORD: test_password
+        #env:
+          #SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/dogwalks_test
+          #SPRING_DATASOURCE_USERNAME: test_user
+          #SPRING_DATASOURCE_PASSWORD: test_password
