@@ -1,56 +1,111 @@
-name: CI
+name: DogWalks CI Pipeline
 
+# Triggers - cuándo ejecutar el CI
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
+  workflow_dispatch: # Permite ejecución manual
+
+# Variables globales del pipeline
+env:
+  JAVA_VERSION: '21'
+  MAVEN_OPTS: '-Xmx1024m'
 
 jobs:
-  build-and-test:
+  # Job 1: Tests Unitarios (rápidos)
+  unit-tests:
+    name: 🧪 Unit Tests
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: dogwalks_test
-          MYSQL_USER: test_user
-          MYSQL_PASSWORD: test_password
-        options: >-
-          --health-cmd "mysqladmin ping --silent"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 3306:3306
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
 
-      - name: Set up JDK 21
-        uses: actions/setup-java@v3
+      - name: ☕ Set up JDK 21
+        uses: actions/setup-java@v4
         with:
-          distribution: temurin
-          java-version: 21
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: maven
 
-      - name: Cache Maven packages
-        uses: actions/cache@v3
+      - name: 🧪 Run Unit Tests
+        run: |
+          echo "🚀 Running unit tests (WalkServiceTest, etc.)"
+          mvn clean test -P unit-tests --no-transfer-progress --batch-mode
+          echo "✅ Unit tests completed"
+
+      - name: 📊 Upload Unit Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
         with:
-          path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+          name: unit-test-results
+          path: |
+            target/surefire-reports/
+            target/site/jacoco/
+          retention-days: 30
 
-      - name: Enable Docker
+  # Job 2: Tests de Integración con TestContainers
+  integration-tests:
+    name: 🐳 Integration Tests with TestContainers
+    runs-on: ubuntu-latest
+    needs: unit-tests # Solo ejecuta si unit tests pasan
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: ☕ Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: maven
+
+      # CRÍTICO: TestContainers necesita Docker
+      - name: 🐳 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🐳 Start Docker service
         run: |
           sudo systemctl start docker
-          docker info
+          sudo docker info
+          echo "✅ Docker is ready for TestContainers"
 
-      - name: Build project and run tests
-        run: mvn clean verify -Dspring.profiles.active=test
-        #env:
-          #SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/dogwalks_test
-          #SPRING_DATASOURCE_USERNAME: test_user
-          #SPRING_DATASOURCE_PASSWORD: test_password
+      - name: 🗂️ Create test reports directory
+        run: mkdir -p target/failsafe-reports
+
+      - name: 🧪 Run Integration Tests with TestContainers
+        run: |
+          echo "🚀 Running integration tests with TestContainers..."
+          echo "  • WalkControllerIntegrationTest"
+          echo "  • AuthControllerIntegrationTest" 
+          echo "  • AdminControllerIntegrationTest"
+          echo "  • CustomUserControllerIntegrationTest"
+          
+          # Ejecutar tests de integración con TestContainers
+          mvn clean verify -P integration-tests \
+            --no-transfer-progress \
+            --batch-mode \
+            -Dspring.profiles.active=test \
+            -Dtestcontainers.reuse.enable=false
+          
+          echo "✅ Integration tests completed"
+
+      - name: 📊 Upload Integration Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: integration-test-results
+          path: |
+            target/failsafe-reports/
+            target/site/jacoco/
+          retention-days: 30
+
+      - name: 🧹 Cleanup TestContainers
+        if: always()
+        run: |
+          docker container prune -f --filter "label=org.testcontainers" || true
+          docker image prune -f || true
+          echo "✅ TestContainers cleanup completed"
