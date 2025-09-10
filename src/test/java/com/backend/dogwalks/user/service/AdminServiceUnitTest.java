@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Admin Service Unit Tests")
-public class AdminServiceTest {
+public class AdminServiceUnitTest {
 
     @Mock
     private CustomUserRepository customUserRepository;
