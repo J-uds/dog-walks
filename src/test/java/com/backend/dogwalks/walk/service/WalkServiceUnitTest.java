@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Walk Service Unit Tests")
-public class WalkServiceTest {
+public class WalkServiceUnitTest {
 
     @Mock
     private WalkRepository walkRepository;
