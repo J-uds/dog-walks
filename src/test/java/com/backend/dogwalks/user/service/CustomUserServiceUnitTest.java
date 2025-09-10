@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName(("Custom User Service Unit Tests"))
-public class CustomUserServiceTest {
+public class CustomUserServiceUnitTest {
 
     @Mock
     private CustomUserRepository customUserRepository;

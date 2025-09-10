@@ -1,35 +1,24 @@
-# Docker Compose configuration for app testing with Maven image
-# This configuration runs tests using the official Maven Docker image
-# without building a custom container image
-
 services:
-  # Test service using official Maven image
+
   test:
-    # Use official Maven image with Eclipse Temurin JDK 21
+
     image: maven:3.9.11-eclipse-temurin-21
 
-    # Set working directory inside container
     working_dir: /src
 
-    # Mount source code as read-only volume for testing
     volumes:
       - type: bind
-        source: . # Current directory (project root)
-        target: /src # Mount point inside container
-        read_only: true # Prevent modifications to source code
-    # Mount Maven cache to speed up builds
+        source: .
+        target: /src
+        read_only: true
       - type: volume
         source: maven-cache
         target: /root/.m2
 
-    # Run Maven test command with test profile
-    # Using -Ptest profile to avoid building JAR files (allows read-only source mounting)
-    entrypoint: ["mvn", "-Ptest", "clean", "verify", "-Dtest=!**/*IntegrationTest", "-DfailIfNoTests=false", "--no-transfer-progress"]
+    entrypoint: ["mvn", "-Ptest", "clean", "verify", "-Dtest=**/*UnitTest", "-DfailIfNoTests=false", "--no-transfer-progress"]
 
-    # Custom container name for easier identification
     container_name: dogwalks-unit-test
 
-    # Environment variables passed to the SpringBoot application
     environment:
       - SPRING_PROFILES_ACTIVE=test
       - JWT_SECRET=poeunhdyqbsjurkdoancnuendkaskdhejdsfwrgefmuweyf43x758jy
@@ -37,10 +26,8 @@ services:
       - ADMIN_EMAIL=testadmin@test.com
       - ADMIN_PASSWORD=testAdminPsw547,
 
-    # Restart policy - never restart (single-run test container)
     restart: no
 
-# Named volumes for Maven cache
 volumes:
   maven-cache:
     driver: local
