@@ -6,7 +6,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.5.4</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
 	<groupId>com.backend</groupId>
 	<artifactId>dogwalks</artifactId>
@@ -111,6 +111,7 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 	</dependencies>
+<<<<<<< HEAD
 	<profiles>
 		<profile>
 			<id>test</id>
@@ -119,6 +120,8 @@
 			</build>
 		</profile>
 	</profiles>
+=======
+>>>>>>> main
 	<build>
 		<plugins>
 			<plugin>

@@ -27,6 +27,5 @@ nbproject/private/
 
 README*
 
-### Docker ###
 docker-compose.yml
 Dockerfile
