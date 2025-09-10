@@ -15,7 +15,7 @@ services:
         source: maven-cache
         target: /root/.m2
 
-    entrypoint: ["mvn", "-Ptest", "clean", "verify", "-Dtest=!**/*IntegrationTest", "-DfailIfNoTests=false", "--no-transfer-progress"]
+    entrypoint: ["mvn", "-Ptest", "clean", "verify", "-Dtest=**/*UnitTest", "-DfailIfNoTests=false", "--no-transfer-progress"]
 
     container_name: dogwalks-unit-test
 
