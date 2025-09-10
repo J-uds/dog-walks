@@ -111,7 +111,6 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 	</dependencies>
-<<<<<<< HEAD
 	<profiles>
 		<profile>
 			<id>test</id>
@@ -120,8 +119,6 @@
 			</build>
 		</profile>
 	</profiles>
-=======
->>>>>>> main
 	<build>
 		<plugins>
 			<plugin>
