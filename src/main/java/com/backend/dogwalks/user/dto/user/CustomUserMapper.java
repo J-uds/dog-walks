@@ -5,8 +5,8 @@ import com.backend.dogwalks.user.entity.CustomUser;
 
 public class CustomUserMapper {
 
-        public static CustomUserResponse toDto(CustomUser user) {
-        return new CustomUserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getUserImgUrl());
+    public static CustomUserResponse toDto(CustomUser user) {
+    return new CustomUserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getUserImgUrl());
     }
 
     public static void updateFromCustomUserUpdateRequest(CustomUser user, CustomUserUpdateRequest request) {

@@ -1,0 +1,25 @@
+services:
+  test:
+    image: maven:3.9.11-eclipse-temurin-21
+    working_dir: /src
+    volumes:
+      - type: bind
+        source: .
+        target: /src
+        read_only: true
+      - type: volume
+        source: maven-cache
+        target: /root/.m2
+    entrypoint: ["mvn", "-Ptest", "clean", "verify", "-Dtest=**/*UnitTest", "-DfailIfNoTests=false", "--no-transfer-progress"]
+    container_name: dogwalks-unit-test
+    environment:
+      - SPRING_PROFILES_ACTIVE=test
+      - JWT_SECRET=poeunhdyqbsjurkdoancnuendkaskdhejdsfwrgefmuweyf43x758jy
+      - JWT_EXPIRATION=864000000
+      - ADMIN_EMAIL=testadmin@test.com
+      - ADMIN_PASSWORD=testAdminPsw547,
+    restart: no
+
+volumes:
+  maven-cache:
+    driver: local
