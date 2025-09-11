@@ -44,7 +44,7 @@ public class AdminControllerIntegrationTest {
             .withDatabaseName("dogwalks-test")
             .withUsername("test_user")
             .withPassword("test_password")
-            .withReuse(false); //por defecto es así
+            .withReuse(false);
 
     @DynamicPropertySource
     static void setDatasourceProperties(DynamicPropertyRegistry registry) {
