@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("JwtUtil Unit Tests")
-public class JwtUtilTest {
+public class JwtUtilUnitTest {
 
     @InjectMocks
     private JwtUtil jwtUtil;
