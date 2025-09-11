@@ -29,5 +29,8 @@ build/
 .vscode/
 
 .env
+<<<<<<< HEAD
+=======
 
 structure.txt
+>>>>>>> main
