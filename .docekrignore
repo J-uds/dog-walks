@@ -1,11 +1,17 @@
+<<<<<<< HEAD
 ### Build/Compilation ###
+=======
+>>>>>>> main
 target/
 build/
 dist/
 nbbuild/
 nbdist/
 
+<<<<<<< HEAD
 ### IDE metadata ###
+=======
+>>>>>>> main
 .idea/
 *.iws
 *.iml
@@ -14,6 +20,7 @@ nbdist/
 nbproject/private/
 *.class
 
+<<<<<<< HEAD
 ### Maven configuration ###
 .mvn/
 
@@ -22,12 +29,20 @@ nbproject/private/
 .gitignore
 
 ### Logs and temporary files ###
+=======
+.mvn/
+
+.git
+.gitignore
+
+>>>>>>> main
 *.log
 *.tmp
 *.bak
 *.swp
 .DS_Store
 
+<<<<<<< HEAD
 ### Environment variables / secrets ###
 .env
 
@@ -39,3 +54,11 @@ docker-compose.yml
 Dockerfile
 
 
+=======
+.env
+
+README*
+
+docker-compose.yml
+Dockerfile
+>>>>>>> main

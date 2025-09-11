@@ -1,7 +1,6 @@
 package com.backend.dogwalks.walk.service;
 
 import com.backend.dogwalks.exception.custom_exception.EntityNotFoundException;
-import com.backend.dogwalks.user.dto.admin.AdminUserMapper;
 import com.backend.dogwalks.user.entity.CustomUser;
 import com.backend.dogwalks.user.enums.Role;
 import com.backend.dogwalks.walk.dto.*;
@@ -14,7 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.AccessDeniedException;
 import java.util.Set;
 
 @Service

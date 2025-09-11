@@ -280,8 +280,5 @@ public class AdminControllerIntegrationTest {
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNotFound());
         }
-
-
     }
-
 }

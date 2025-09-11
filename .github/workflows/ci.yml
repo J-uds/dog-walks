@@ -1,0 +1,74 @@
+name: CI - Continuous Integration
+
+# When executes?
+on:
+  push:
+    branches: [ main, dev ]  # when upload to main or dev
+  pull_request:
+    branches: [ main ]          # when performing pull to main
+
+jobs:
+  test:
+    name: Run test and analysis
+    runs-on: ubuntu-latest      # Máquina virtual donde se ejecuta
+    
+#    services:
+#      mysql:
+#        image: mysql:8.0
+#        env:
+#          MYSQL_ROOT_PASSWORD: rootgithub
+#          MYSQL_DATABASE: dogwalks_github_test
+#          MYSQL_USER: github_test_user
+#          MYSQL_PASSWORD: github_test_password
+#        ports:
+#          - 3306:3306
+#        options: >-
+#          --health-cmd="mysqladmin ping --silent"
+#          --health-interval=10s
+#          --health-timeout=5s
+#          --health-retries=3
+    
+    steps:
+    # Step 1: Download code
+    - name: Checkout código
+      uses: actions/checkout@v4
+      
+    # Step 2: Configure Java 
+    - name: Configure Java 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+        
+    # Step 3: Wait for MySQL to be ready
+#    - name: Wait MySQL
+#      run: |
+#        while ! mysqladmin ping -h"127.0.0.1" -P3306 -uroot -prootgithub --silent; do
+#          sleep 1
+#        done
+        
+    # Step 4: Run tests
+    - name: Run tests
+      run: mvn clean test
+      env:
+        DB_URL_LOCAL: jdbc:mysql://localhost:3306/dogwalks_github_test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+        DB_ROOT_USER: github_test_user
+        DB_ROOT_PASSWORD: github_test_password
+        JWT_SECRET: test-secret-key-for-github-actions
+        JWT_EXPIRATION: 3600000
+        ADMIN_EMAIL: admin@test.com
+        ADMIN_PASSWORD: TestPassword123!
+        
+    # Step 5: Compile the app
+    - name: Compile app
+      run: mvn clean compile
+      
+    # Step 6: Generate coverage report (optional)
+    - name: Generate coverage report
+      run: mvn jacoco:report
+      
+    # Step 7: Upload coverage reports
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      if: success()

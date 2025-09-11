@@ -42,8 +42,6 @@ services:
       MYSQL_ROOT_PASSWORD: rootdog
     ports:
       - "3307:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootdog"]
@@ -57,7 +55,3 @@ services:
 networks:
   dogwalks-network:
     driver: bridge
-
-volumes:
-  mysql_data:
-    driver: local

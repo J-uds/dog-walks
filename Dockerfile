@@ -1,5 +1,3 @@
-
-# Build the app
 FROM maven:3.9.11-eclipse-temurin-21 AS build
 
 WORKDIR /workspace
@@ -12,7 +10,7 @@ COPY src ./src
 
 RUN mvn -B clean package -DskipTests
 
-# Run the app
+
 FROM eclipse-temurin:21-jre
 
 RUN groupadd -r dogwalks && useradd -r -g dogwalks -d /app -s /bin/bash dogwalks
