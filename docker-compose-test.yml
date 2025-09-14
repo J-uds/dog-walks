@@ -2,6 +2,7 @@ services:
   test:
     image: maven:3.9.11-eclipse-temurin-21
     working_dir: /src
+    privileged: true
     volumes:
       - type: bind
         source: .
@@ -10,7 +11,18 @@ services:
       - type: volume
         source: maven-cache
         target: /root/.m2
-    entrypoint: ["mvn", "-Ptest", "clean", "verify", "-Dtest=**/*UnitTest", "-DfailIfNoTests=false", "--no-transfer-progress"]
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+    entrypoint:
+      [
+        "mvn",
+        "-Ptest",
+        "clean",
+        "test",
+        "-DfailIfNoTests=false",
+        "--no-transfer-progress",
+      ]
     container_name: dogwalks-unit-test
     environment:
       - SPRING_PROFILES_ACTIVE=test
@@ -18,6 +30,7 @@ services:
       - JWT_EXPIRATION=864000000
       - ADMIN_EMAIL=testadmin@test.com
       - ADMIN_PASSWORD=testAdminPsw547,
+      - TESTCONTAINERS_RYUK_DISABLED=true
     restart: no
 
 volumes:
