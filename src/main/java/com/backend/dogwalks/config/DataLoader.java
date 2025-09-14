@@ -19,10 +19,10 @@ public class DataLoader implements CommandLineRunner {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Value("${ADMIN_EMAIL}")
+    @Value("${initial.admin.email}")
     private String adminEmail;
 
-    @Value("${ADMIN_PASSWORD}")
+    @Value("${initial.admin.password}")
     private String adminPassword;
 
     @Override
