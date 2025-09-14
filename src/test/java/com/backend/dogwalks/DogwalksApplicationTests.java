@@ -16,16 +16,16 @@ class DogwalksApplicationTests {
 
 	@Container
 	static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0")
-			.withDatabaseName("test_db")
+			.withDatabaseName("dogwalks-test")
 			.withUsername("test_user")
-			.withPassword("test_password");
+			.withPassword("test_password")
+			.withReuse(false);
 
 	@DynamicPropertySource
 	static void configureProperties(DynamicPropertyRegistry registry) {
 		registry.add("spring.datasource.url", mysql::getJdbcUrl);
 		registry.add("spring.datasource.username", mysql::getUsername);
 		registry.add("spring.datasource.password", mysql::getPassword);
-		registry.add("spring.datasource.driver-class-name", () -> "com.mysql.cj.jdbc.Driver");
 	}
 
 	@Test
