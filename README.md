@@ -18,12 +18,13 @@ A REST API developed with Java Spring Boot for managing dog walks. Authenticated
 - [Available Endpoints](#available-endpoints)
 - [Security and Authentication](#security-and-authentication)
 - [Testing](#testing)
-- [Deployment](#deployment)
+- [CI/CD and Deployment](#cicd-and-deployment)
+- [Monitoring and Health](#monitoring-and-health)
 - [Contributing](#contributing)
 
 ## 🎯 Description
 
-Dog Walks API is a backend service that allows users to manage dog walks. The application implements JWT authentication, user roles (USER/ADMIN), and complete CRUD operations for users and walks.
+Dog Walks API is a backend service that allows users to manage dog walks. The application implements JWT authentication, user roles (USER/ADMIN), complete CRUD operations for users and walks, and includes automated testing and deployment workflows.
 
 ## ✨ Key Features
 
@@ -35,7 +36,9 @@ Dog Walks API is a backend service that allows users to manage dog walks. The ap
 - 📊 **Public Endpoints**: Unauthenticated access to consult walks
 - 🧪 **Complete Testing**: Integration test suite with TestContainers
 - ⚙️ **Environment Configuration**: All configurations externalized
-- 🐳 **Containerization**: Easy deployment with Docker and Docker Compose
+- 🐳 **Containerization**: Docker support with multi-stage builds and health checks
+- 🚀 **Automated CI/CD**: GitHub Actions workflows for testing, building, and releasing
+- 📈 **Health Monitoring**: Spring Actuator for application health and metrics
 
 ## 🛠️ Technologies Used
 
@@ -56,7 +59,7 @@ Dog Walks API is a backend service that allows users to manage dog walks. The ap
 
 ### Testing
 - **JUnit 5**: Testing framework
-- **TestContainers**: Integration tests with real MySQL
+- **TestContainers**: Integration tests with real MySQL containers
 - **Spring Boot Test**: Testing utilities
 - **MockMvc**: Controller testing
 
@@ -66,10 +69,11 @@ Dog Walks API is a backend service that allows users to manage dog walks. The ap
 - **Spring Dotenv**: Environment variable management
 - **Maven**: Dependency management
 
-### Containerization
-- **Docker**: Application containerization
-- **Docker Compose**: Multi-container orchestration
-- **Multi-stage Build**: Optimized Docker image creation
+### DevOps & Containerization
+- **Docker**: Application containerization with multi-stage builds
+- **Docker Compose**: Multi-container orchestration for development and production
+- **GitHub Actions**: CI/CD pipeline automation
+- **Docker Hub**: Container image registry
 
 ## 🏗️ Project Architecture
 
@@ -81,6 +85,17 @@ src/main/java/com/backend/dogwalks/
 ├── security/         # JWT & UserDetailsService
 ├── config/           # Security Config
 └── exception/        # Global exception handling
+```
+
+### CI/CD Architecture
+```
+GitHub Repository
+├── .github/workflows/
+│   ├── test.yml      # PR validation (TestContainers)
+│   ├── build.yml     # Main branch builds (Docker Hub)
+│   └── release.yml   # Tagged releases (tests + Docker Hub)
+├── docker-compose.yml        # Production deployment
+└── docker-compose-test.yml   # Testing environment
 ```
 
 ## 📊 Data Model
@@ -97,12 +112,18 @@ src/main/java/com/backend/dogwalks/
 ### For Docker Installation (Recommended)
 - **Docker 20.0+**
 - **Docker Compose 2.0+**
+- **Git** for cloning the repository
 
 ### For Manual Installation
 - **Java 21** or higher
-- **Maven 3.6+**
+- **Maven 3.9+**
 - **MySQL 8.0** or higher
 - **IDE** recommended: IntelliJ IDEA, Eclipse, or VS Code
+
+### For Development
+- **Docker** (for TestContainers)
+- **GitHub account** (for CI/CD workflows)
+- **Docker Hub account** (for image publishing)
 
 ## 🚀 Installation
 
@@ -120,13 +141,14 @@ cd dog-walks
 Create a `.env` file in the project root (this part shows example values, change them as needed):
 ```env
 # Database Configuration
+DB_HOST_URL=...
 DB_URL=...
 DB_USER=...
 DB_PASSWORD=...
 DB_ROOT_PASSWORD=...
 
 # JWT Configuration
-JWT_SECRET=...
+JWT_SECRET=... # Must be 256+ bits
 JWT_EXPIRATION=...
 
 # Initial Admin User
@@ -144,12 +166,17 @@ docker-compose ps
 
 # View logs
 docker-compose logs -f dogwalks-app
+
+# View database logs
+docker-compose logs -f dogwalks-db
 ```
 
 #### Step 4: Verify the application
 The application will be available at:
 
 **API**: `http://localhost:8080/api`
+- **Health Check**: `http://localhost:8080/actuator/health`
+- **Database**: `localhost:3307` (MySQL)
 
 ### Option 2: Manual Installation
 
@@ -173,12 +200,13 @@ FLUSH PRIVILEGES;
 Create a `.env` file in the project root:
 ```properties
 # Database
+DB_HOST_URL=...
 DB_URL=...
 DB_USER=...
 DB_PASSWORD=...
 
 # JWT
-JWT_SECRET=...
+JWT_SECRET=... # Must be 256+ bits
 JWT_EXPIRATION=...
 
 # Initial admin
@@ -191,7 +219,13 @@ SERVER_PORT=...
 
 #### Step 4: Build and run
 ```bash
+# Clean and compile
 mvn clean compile
+
+# Run tests
+mvn test
+
+# Start the application
 mvn spring-boot:run
 ```
 
@@ -206,7 +240,13 @@ The application will be available at `http://localhost:8080`
 ### Application Profiles
 - **Development**: Uses `.env` file variables
 - **Docker**: Optimized for container environment
-- **Testing**: Automatic configuration with TestContainers
+- **Test**: Automatic configuration with TestContainers for integration testing
+
+### Docker Configuration
+- **Multi-stage Build**: Optimized for production with minimal image size
+- **Health Checks**: Automatic health monitoring for both app and database
+- **Network Isolation**: Dedicated Docker network for security
+- **Volume Management**: Proper data persistence and caching
 
 ## 📚 API Usage
 
@@ -239,10 +279,11 @@ Authorization: Bearer {jwt_token}  # For protected endpoints
 
 ### Security Flow
 
-1. **Registration**: User creates account with unique email
-2. **Login**: Credential validation and JWT generation
-3. **Authentication**: Each request includes JWT token in header
-4. **Authorization**: Role and permission verification per endpoint
+1. **Registration**: User creates account with unique email and strong password
+2. **Authentication**: Credential validation against BCrypt hashed password
+3. **Token Generation**: JWT token created with user details and expiration
+4. **Authorization**: Each request validates JWT token and user permissions
+5. **Role Verification**: Endpoint access based on user role and resource ownership
 
 ### Roles and Permissions
 
@@ -262,14 +303,15 @@ Authorization: Bearer {jwt_token}  # For protected endpoints
 
 The project includes complete integration tests using TestContainers with real MySQL.
 
-### Run tests with Docker
-```bash
-# Using Docker Compose
-docker-compose run --rm dogwalks-app mvn test
+### Running Tests
 
-# Or build a test image
-docker build -t dogwalks-test --target build .
-docker run --rm dogwalks-test mvn test
+#### Run test with Docker (CI/CD approach)
+```bash
+# Run tests using Docker Compose (recommended)
+docker-compose -f docker-compose-test.yml up --abort-on-container-exit
+
+# Clean up after tests
+docker-compose -f docker-compose-test.yml down -v
 ```
 
 ### Run tests manually
@@ -277,40 +319,60 @@ docker run --rm dogwalks-test mvn test
 mvn test
 ```
 
-## 🚀 Deployment
+## 🚀 CI/CD and Deployment
 
-### Production Deployment with Docker
+### GitHub Actions Workflows
 
-#### Docker Compose recommended for Production
+The project includes three automated workflows:
 
-#### Health Monitoring
+#### 1. Test Workflow (`.github/workflows/test.yml`)
+- **Trigger**: Pull requests to main branch
+- **Purpose**: Validate code changes before merge
+- **Steps**:
+  1. Checkout code
+  2. Set up Docker Buildx
+  3. Run TestContainers integration tests
+  4. Clean up resources
 
-The application includes health check endpoints:
+#### 2. Build Workflow (`.github/workflows/build.yml`)
+- **Trigger**: Pushes to main branch
+- **Purpose**: Build and push Docker images for development
+- **Steps**:
+  1. Checkout code
+  2. Set up Docker Buildx
+  3. Login to Docker Hub
+  4. Extract metadata (branch, SHA tags)
+  5. Build and push Docker image with caching
 
+#### 3. Release Workflow (`.github/workflows/release.yml`)
+- **Trigger**: Git tags starting with "v" (e.g., v1.0.0)
+- **Purpose**: Full testing and production image release
+- **Steps**:
+  1. Checkout code
+  2. Set up Docker Buildx
+  3. Run comprehensive tests with TestContainers
+  4. Login to Docker Hub
+  5. Build and push production image with "latest" tag
+  6. Clean up test resources
+
+
+### Database Backup and Maintenance
 ```bash
-# Check application health
-curl http://localhost:8080/actuator/health
+# Create database backup
+docker-compose exec dogwalks-db mysqldump -u dog -pdog dogwalks > backup.sql
 
-# Docker health checks are automatic
-docker-compose ps  # Shows health status
-```
+# Restore from backup
+docker-compose exec -T dogwalks-db mysql -u dog -pdog dogwalks < backup.sql
 
-#### Database Backup with Docker
-```bash
-# Create backup
-docker-compose exec dogwalks-db mysqldump -u dog -p dogwalks > backup.sql
-
-# Restore backup
-docker-compose exec -T dogwalks-db mysql -u dog -p dogwalks < backup.sql
+# Monitor database health
+docker-compose exec dogwalks-db mysqladmin status -u dog -pdog
 ```
 
 ## 🚀 Future Improvements
 
 - [ ] Enhanced pagination with location filters
 - [ ] Email notification system
-- [ ] Image upload API with Docker volume mounts
 - [ ] Walk rating system
-- [ ] CI/CD pipeline with Docker
 
 ## 📝 License
 
@@ -337,3 +399,4 @@ This project is licensed under the **Apache License 2.0** - see the [LICENSE](LI
 - [MySQL 8.0 Reference Manual](https://dev.mysql.com/doc/refman/8.0/en/)
 - [Docker Documentation](https://docs.docker.com/)
 - [Docker Compose Guide](https://docs.docker.com/compose/)
+- [GitHub Actions Documentation](https://docs.github.com/en/actions)
