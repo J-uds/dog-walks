@@ -4,23 +4,27 @@ A REST API developed with Java Spring Boot for managing dog walks. Authenticated
 
 ## 📋 Table of Contents
 
-- [Description](#description)
-- [Key Features](#key-features)
-- [Technologies Used](#technologies-used)
-- [Project Architecture](#project-architecture)
-- [Data Model](#data-model)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-    - [Option 1: With Docker (Recommended)](#option-1-with-docker-recommended)
-    - [Option 2: Manual Installation](#option-2-manual-installation)
-- [Configuration](#configuration)
-- [API Usage](#api-usage)
-- [Available Endpoints](#available-endpoints)
-- [Security and Authentication](#security-and-authentication)
-- [Testing](#testing)
-- [CI/CD and Deployment](#cicd-and-deployment)
-- [Monitoring and Health](#monitoring-and-health)
-- [Contributing](#contributing)
+- [Description](#-description)
+- [Key Features](#-key-features)
+- [Technologies Used](#-technologies-used)
+- [Project Architecture](#-project-architecture)
+- [Data Model](#-data-model)
+- [Prerequisites](#-prerequisites)
+- [Installation](#-installation)
+    - [Option 1: With Docker (Recommended)](#-option-1-with-docker-recommended)
+    - [Option 2: Manual Installation](#-option-2-manual-installation)
+- [Configuration](#-configuration)
+- [API Usage](#-api-usage)
+- [Available Endpoints](#-available-endpoints)
+- [Security and Authentication](#-security-and-authentication)
+- [Testing](#-testing)
+- [CI/CD and Deployment](#-cicd-and-deployment)
+- [Monitoring and Health](#-monitoring-and-health)
+- [Future Improvements](#-future-improvements)
+- [License](#-license)
+- [Author](#-author)
+- [Support](#-support)
+- [Additional Resources](#-additional-resources)
 
 ## 🎯 Description
 
@@ -141,7 +145,7 @@ cd dog-walks
 Create a `.env` file in the project root (this part shows example values, change them as needed):
 ```env
 # Database Configuration
-DB_HOST_URL=...
+DB_URL_LOCAL=...
 DB_URL=...
 DB_USER=...
 DB_PASSWORD=...
@@ -200,7 +204,7 @@ FLUSH PRIVILEGES;
 Create a `.env` file in the project root:
 ```properties
 # Database
-DB_HOST_URL=...
+DB_URL_LOCAL=...
 DB_URL=...
 DB_USER=...
 DB_PASSWORD=...
