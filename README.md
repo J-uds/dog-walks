@@ -19,7 +19,7 @@ A REST API developed with Java Spring Boot for managing dog walks. Authenticated
 - [Security and Authentication](#-security-and-authentication)
 - [Testing](#-testing)
 - [CI/CD and Deployment](#-cicd-and-deployment)
-- [Monitoring and Health](#-monitoring-and-health)
+- [Monitoring](#-monitoring)
 - [Future Improvements](#-future-improvements)
 - [License](#-license)
 - [Author](#-author)
@@ -359,6 +359,63 @@ The project includes three automated workflows:
   5. Build and push production image with "latest" tag
   6. Clean up test resources
 
+### Docker Configuration
+
+#### Multi-stage Dockerfile
+```dockerfile
+# Build stage (not shown in documents but implied)
+FROM maven:3.9.11-eclipse-temurin-21 AS build
+# ... build steps
+
+# Runtime stage
+FROM eclipse-temurin:21-jre-alpine
+# ... optimized runtime image
+```
+
+#### Production Deployment
+```bash
+# Deploy to production
+git tag v1.0.0
+git push origin v1.0.0  # Triggers release workflow
+
+# Monitor deployment
+docker-compose ps
+docker-compose logs -f dogwalks-app
+```
+
+### Secrets Configuration
+
+Required GitHub Secrets:
+```yaml
+DOCKER_USERNAME: your_dockerhub_username
+DOCKER_PASSWORD: your_dockerhub_token
+```
+
+### Container Registry
+- **Registry**: Docker Hub
+- **Image**: `{username}/dogwalks`
+- **Tags**:
+  - Branch names (development)
+  - Git SHA (traceability)
+  - Version tags (releases)
+  - `latest` (stable release)
+
+## 📈 Monitoring
+
+### Monitoring Commands
+```bash
+# Check service status
+docker-compose ps
+
+# Monitor logs in real-time
+docker-compose logs -f dogwalks-app
+
+# Check application health
+curl http://localhost:8080/actuator/health
+
+# View detailed service information
+docker-compose exec dogwalks-app curl localhost:8080/actuator/info
+```
 
 ### Database Backup and Maintenance
 ```bash
