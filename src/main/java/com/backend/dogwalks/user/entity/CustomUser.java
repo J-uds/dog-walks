@@ -43,11 +43,10 @@ public class CustomUser {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Walk> walks = new ArrayList<>();
 
-    public CustomUser(String username, String email, String password /*String userImgUrl*/) {
+    public CustomUser(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
-        /*this.userImgUrl = userImgUrl;*/
     }
 
     public CustomUser(String username, String email, String userImgUrl, Role role, Boolean isActive) {
