@@ -6,10 +6,7 @@ import com.backend.dogwalks.user.entity.CustomUser;
 import com.backend.dogwalks.user.enums.Role;
 import com.backend.dogwalks.user.repository.CustomUserRepository;
 import com.backend.dogwalks.utils.IntegrationTestUtils;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -279,6 +276,13 @@ public class AdminControllerIntegrationTest {
                             .header("Authorization", "Bearer " + adminToken)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNotFound());
+        }
+    }
+
+    @AfterAll
+    static void cleanup() {
+        if (mySqlContainer != null && mySqlContainer.isRunning()) {
+            mySqlContainer.stop();
         }
     }
 }
