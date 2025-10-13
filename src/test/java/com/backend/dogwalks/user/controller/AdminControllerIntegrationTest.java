@@ -278,11 +278,4 @@ public class AdminControllerIntegrationTest {
                     .andExpect(status().isNotFound());
         }
     }
-
-    @AfterAll
-    static void cleanup() {
-        if (mySqlContainer != null && mySqlContainer.isRunning()) {
-            mySqlContainer.stop();
-        }
-    }
 }

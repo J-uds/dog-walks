@@ -303,11 +303,4 @@ public class WalkControllerIntegrationTest {
             assertFalse(walkRepository.findById(walk.getId()).isPresent());
         }
     }
-
-    @AfterAll
-    static void cleanup() {
-        if (mySqlContainer != null && mySqlContainer.isRunning()) {
-            mySqlContainer.stop();
-        }
-    }
 }

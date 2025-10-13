@@ -238,11 +238,4 @@ public class AuthControllerIntegrationTest {
 
         restTemplate.exchange(baseUrl + "/register", HttpMethod.POST, entity, RegisterResponse.class);
     }
-
-    @AfterAll
-    static void cleanup() {
-        if (mySqlContainer != null && mySqlContainer.isRunning()) {
-            mySqlContainer.stop();
-        }
-    }
 }

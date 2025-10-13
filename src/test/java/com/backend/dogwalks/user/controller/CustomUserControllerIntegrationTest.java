@@ -176,13 +176,6 @@ public class CustomUserControllerIntegrationTest {
         CustomUser deactivatedUser = userRepository.findById(user.getId()).get();
         assertFalse(deactivatedUser.getIsActive());
     }
-
-    @AfterAll
-    static void cleanup() {
-        if (mySqlContainer != null && mySqlContainer.isRunning()) {
-            mySqlContainer.stop();
-        }
-    }
 }
 
 
